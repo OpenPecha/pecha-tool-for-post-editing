@@ -7,21 +7,19 @@ function Dictionary({ setDictionary, text }) {
   const [data, setUpdatedDictionary] = useState({});
   const [isContentChanged, setIsContentChanged] = useState(false);
   const [selectedWord, setSelectedWord] = useState(null);
-  let debouncedText = useDebounce(text, 1000);
   useEffect(() => {
     async function fetcherdata() {
       let url = "/api/dictionary/" + text;
       fetch(url)
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           setSelectedWord(Object.keys(data)[0]);
           setUpdatedDictionary(data);
         });
     }
     console.log(text);
     if (text) fetcherdata();
-  }, [debouncedText]);
+  }, [text]);
 
   useEffect(() => {
     setDictionary(JSON.stringify(data));

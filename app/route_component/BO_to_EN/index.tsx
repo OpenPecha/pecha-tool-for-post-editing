@@ -9,6 +9,7 @@ import checkUnknown from "~/lib/checkunknown";
 import Button from "~/component/Button";
 import ActionButtons from "~/component/layout/ActionButtons";
 import Sidebar from "~/component/layout/Sidebar";
+import useDebounce from "~/lib/useDebounce";
 export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   let url = new URL(request.url);
   let session = url.searchParams.get("session");
@@ -18,7 +19,6 @@ export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   let text = "ཡང་སྲིད་སྐྱོང་མཆོག་གིས། ";
   return {
     text,
-    OPENAI_key: process.env.OPENAI_KEY,
   };
 };
 
@@ -28,6 +28,8 @@ export default function BO_to_EN() {
   let [mainText, setMainText] = useState(null);
   let [mitraText, setMitraText] = useState("");
   let [dictionary, setDictionary] = useState("");
+  let debouncedText = useDebounce(mainText, 1000);
+
   return (
     <div className="main">
       <Sidebar user={null} online={[]} />
@@ -44,19 +46,18 @@ export default function BO_to_EN() {
           <div style={{ maxWidth: 600, width: "100%" }}>
             <TextView text={mainText} setMainText={setMainText} />
             <GPTview
-              text={mainText}
+              text={debouncedText}
               mitraText={mitraText}
               dictionary={dictionary}
             />
             <MitraView
-              text={mainText}
+              text={debouncedText}
               language="bo-en"
               setContent={setMitraText}
               content={mitraText}
             />
           </div>
-          <Dictionary setDictionary={setDictionary} text={mainText} />
-          <ActionButtons />
+          <Dictionary setDictionary={setDictionary} text={debouncedText} />
         </div>
       </div>
     </div>

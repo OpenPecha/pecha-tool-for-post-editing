@@ -45,6 +45,7 @@
   gap: 5px;
   align-items: center;
   margin-bottom: 5px;
+  flex-wrap: wrap;
 }
 .dictionary-row {
   background-color: #eea;

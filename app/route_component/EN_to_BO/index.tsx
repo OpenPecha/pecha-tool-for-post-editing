@@ -17,7 +17,6 @@ export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   let text = "my name is tashi , how are you";
   return {
     text,
-    OPENAI_key: process.env.OPENAI_KEY,
   };
 };
 
@@ -128,7 +127,6 @@ export default function EN_to_BO() {
             />
           </div>
         </div>
-        <ActionButtons />
       </div>
     </div>
   );

@@ -23,7 +23,6 @@ export const fetchDharmaMitraData = async (
       body: JSON.stringify(requestData),
     });
     let res = await response.text();
-    console.log(res);
     return convertToJSON(res);
   } catch (e) {
     console.log(e);
@@ -33,7 +32,7 @@ export const fetchDharmaMitraData = async (
 export const fetchGPTData = async (sentence: string) => {
   let prompt = sentence;
   const configuration = new Configuration({
-    apiKey: process.env.OPENAI_key,
+    apiKey: process.env.OPENAI_KEY,
   });
   const openai = new OpenAIApi(configuration);
   try {

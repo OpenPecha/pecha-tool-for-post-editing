@@ -14,7 +14,6 @@ interface TextViewProps {
 function MitraTextView({ text, language, setContent }: TextViewProps) {
   const [data, setData] = useState("");
   const [isContentChanged, setIsContentChanged] = useState(false);
-  let debouncedText = useDebounce(text, 1000);
 
   useEffect(() => {
     let url = "/api/mitra?sentence=" + text + "&language=" + language;
@@ -28,7 +27,7 @@ function MitraTextView({ text, language, setContent }: TextViewProps) {
         });
     }
     if (text) fetchdata();
-  }, [debouncedText]);
+  }, [text]);
 
   function handleSave() {
     setContent(data);

@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import CopyButton from "~/component/CopyButton";
 import { cleanUpSymbols } from "~/lib/cleanupText";
 import { CopySVG } from "~/style/svg/copy";
 
@@ -12,13 +13,14 @@ function GPTview({
   dictionary: string;
 }) {
   const [content, setContent] = useState("");
-  const textRef = useRef();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (text && mitraText && dictionary) {
+    async function fetchdata() {
+      setIsLoading(true);
       let prompt = `original text: ${text}, translated text: ${mitraText}`;
       if (dictionary) prompt += `, dictionary: ${dictionary}`;
-      prompt += `make translation better with dictionary`;
+      prompt += `make translation better from bo to en`;
       let url = `/api/openai`;
       const formData = new FormData();
       formData.append("prompt", prompt);
@@ -29,34 +31,24 @@ function GPTview({
         .then((res) => res.json())
         .then((data) => {
           setContent(data.result);
+          setIsLoading(false);
         });
     }
+    if (text && mitraText && dictionary) fetchdata();
   }, [text, mitraText, dictionary]);
-
-  const handleCopy = () => {
-    const data = cleanUpSymbols(content);
-    if (textRef.current) {
-      textRef.current.select();
-      document.execCommand("copy");
-      console.log("Text copied to clipboard: " + data);
-    }
-  };
 
   return (
     <div className="final-box">
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div className="box-title">Final:</div>
-        <div onClick={handleCopy} className="copy_btn">
-          <CopySVG />
-        </div>
+        <CopyButton textToCopy={cleanUpSymbols(content)} />
       </div>
-      <textarea
-        className="box-content"
-        ref={textRef}
-        style={{ maxWidth: "95%" }}
-        value={cleanUpSymbols(content) || "Enter something in Source"}
-        readOnly
-      />
+      {isLoading && <div className="loader">Loading</div>}
+      {!isLoading && (
+        <div className="box-content" style={{ maxWidth: "95%" }}>
+          {cleanUpSymbols(content) || "Enter something in Source"}
+        </div>
+      )}
     </div>
   );
 }
