@@ -8,7 +8,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import globalStyle from "~/style/global.css";
-
+import { RecoilRoot } from "recoil";
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: globalStyle },
 ];
@@ -23,7 +23,9 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Outlet />
+        <RecoilRoot>
+          <Outlet />
+        </RecoilRoot>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

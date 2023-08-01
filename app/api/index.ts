@@ -1,9 +1,16 @@
-export const fetchDharmaMitraData = async (sentence: string) => {
+import { convertToJSON } from "~/lib/convertToJSON";
+import { OpenAIApi, Configuration } from "openai";
+import { v4 as uuidv4 } from "uuid";
+export type languageType = "en-bo" | "bo-en";
+export const fetchDharmaMitraData = async (
+  sentence: string,
+  language: languageType
+) => {
   const apiUrl = "https://dharmamitra.org/api/translation/";
   const requestData = {
     input_sentence: sentence,
     level_of_explanation: 0,
-    language: "bo-en",
+    language: language,
     model: "NO",
   };
 
@@ -16,28 +23,78 @@ export const fetchDharmaMitraData = async (sentence: string) => {
       body: JSON.stringify(requestData),
     });
     let res = await response.text();
-    return stringify(res);
+    console.log(res);
+    return convertToJSON(res);
   } catch (e) {
     console.log(e);
   }
 };
 
-function stringify(str: string) {
-  // Split the string into an array by newline
-  let parts = str.split("\n");
-
-  // Create an empty object to store the data
-  let obj = {};
-
-  // Loop through each part
-  for (let part of parts) {
-    // Split each part by ': '
-    let [key, value] = part.split(": ");
-    // If key and value both exist, add to object
-    if (key && value) {
-      obj[key] = value.replace(/"/g, ""); // Remove quote marks
-    }
+export const fetchGPTData = async (sentence: string) => {
+  let prompt = sentence;
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_key,
+  });
+  const openai = new OpenAIApi(configuration);
+  try {
+    const result = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt,
+      temperature: 0.5,
+      max_tokens: 2000,
+    });
+    return result.data.choices[0].text;
+  } catch (e) {
+    console.log("error", e.response.data);
   }
+  return "";
+};
 
-  return JSON.stringify(obj);
-}
+export const fetchDictionary = async (word: string) => {
+  let url =
+    "https://api.padma.io/dictionary_lookup?query=" +
+    word +
+    "&matching=exact&dictionaries=erik_pema_kunsang,jeffrey_hopkins,jim_welby&tokenize=false&mode=api";
+};
+
+export const bingTranslate = async (
+  text: string,
+  from_lang: string,
+  to_lang: string,
+  key: string
+) => {
+  const baseURL = "https://api.cognitive.microsofttranslator.com";
+  const apiURL = "/translate";
+  const url = new URL(apiURL, baseURL);
+
+  const queryParams = {
+    "api-version": "3.0",
+    from: from_lang,
+    to: [to_lang],
+  };
+
+  url.search = new URLSearchParams(queryParams).toString();
+
+  const headers = {
+    "Ocp-Apim-Subscription-Key": key,
+    "Ocp-Apim-Subscription-Region": "eastus",
+    "Content-Type": "application/json",
+    "X-ClientTraceId": uuidv4().toString(),
+  };
+
+  const requestOptions = {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify([{ text }]),
+    responseType: "json",
+  };
+  try {
+    const response = await fetch(url, requestOptions);
+    const data = await response.json();
+
+    let res = data[0].translations[0].text;
+    return res;
+  } catch (error) {
+    console.error("Error in translation API: ", error);
+  }
+};

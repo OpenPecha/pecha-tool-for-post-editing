@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id String @default(uuid()) @unique @id
+  username String @unique
+  accepted_en  BO_EN_Text[]   @relation("UserModifiedText")
+  rejected_en BO_EN_Text[]   @relation("UserRejectedText")
+  ignored_en  BO_EN_Text[]   @relation("UserIgnoredText")
+  accepted_bo  EN_BO_Text[]   @relation("UserModifiedText")
+  rejected_bo EN_BO_Text[]   @relation("UserRejectedText")
+  ignored_bo  EN_BO_Text[]   @relation("UserIgnoredText")
+}
+
+model BO_EN_Text{
+  id Int @default(autoincrement()) @unique @id
+  original_text String 
+  status         Status?
+  modified_text String?
+  modified_by    User?    @relation("UserModifiedText", fields: [modified_by_id], references: [id])
+  modified_by_id String?
+  rejected_by    User[]   @relation("UserRejectedText")
+  ignored_by     User[]   @relation("UserIgnoredText")
+}
+
+
+model EN_BO_Text{
+  id Int @default(autoincrement()) @unique @id
+  original_text String 
+  status         Status?
+  modified_text String?
+  modified_by    User?    @relation("UserModifiedText", fields: [modified_by_id], references: [id])
+  modified_by_id String?
+  rejected_by    User[]   @relation("UserRejectedText")
+  ignored_by     User[]   @relation("UserIgnoredText")
+}
+
+enum Status {
+  PENDING
+  APPROVED
+  REJECTED
+}
