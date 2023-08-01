@@ -52,6 +52,7 @@ export default function EN_to_BO() {
       <div
         style={{
           display: "flex",
+          flexDirection: "column",
           justifyContent: "space-between",
           gap: 20,
           overflowY: "scroll",
@@ -59,72 +60,81 @@ export default function EN_to_BO() {
           height: "100%",
         }}
       >
-        <div style={{ flex: 1 }}>
-          <TextView text={text} setMainText={setText} />
-          <GPTView
-            text={debouncedText}
-            formal={true}
-            setContent={set_gpt1_result}
-            isSelected={selectedBox === 1}
-          />
-          <GPTView
-            text={debouncedText}
-            formal={false}
-            setContent={set_gpt2_result}
-            isSelected={selectedBox === 2}
-          />
-          <EditorView text={finalText} />
+        <div style={{ flex: 1, display: "flex", gap: 10, padding: 10 }}>
+          <div style={{ flex: 1 }}>
+            <TextView text={text} setMainText={setText} />
+            <EditorView text={finalText} />
+          </div>
+          <div style={{ flex: 1 }}>
+            <div
+              className="container-view box-item"
+              style={{
+                background: selectedOption !== "bing1" ? "#eee" : "#eea",
+              }}
+            >
+              <BingView
+                text={debouncedText}
+                onBoxClick={onBoxClick}
+                name="bing1"
+              />
+            </div>
+            <div
+              className="container-view box-item"
+              style={{
+                background: selectedOption !== "mitra1" ? "#eee" : "#eea",
+              }}
+            >
+              <MitraTextView
+                text={debouncedText}
+                language="en-bo"
+                onBoxClick={onBoxClick}
+                name="mitra1"
+              />
+            </div>
+          </div>
         </div>
-        <div style={{ flex: 1 }}>
-          <div
-            className="container-view box-item"
-            style={{
-              background: selectedOption !== "bing1" ? "#eee" : "#eea",
-            }}
-          >
-            <BingView
+
+        <div style={{ display: "flex", flex: 1, gap: 10, padding: 10 }}>
+          <div style={{ flex: 1 }}>
+            <GPTView
               text={debouncedText}
-              onBoxClick={onBoxClick}
-              name="bing1"
+              formal={true}
+              setContent={set_gpt1_result}
+              isSelected={selectedBox === 1}
             />
-          </div>
-          <div
-            className="container-view box-item"
-            style={{
-              background: selectedOption !== "mitra1" ? "#eee" : "#eea",
-            }}
-          >
-            <MitraTextView
+            <GPTView
               text={debouncedText}
-              language="en-bo"
-              onBoxClick={onBoxClick}
-              name="mitra1"
+              formal={false}
+              setContent={set_gpt2_result}
+              isSelected={selectedBox === 2}
             />
           </div>
-          <div
-            className="container-view box-item"
-            style={{
-              background: selectedOption !== "bing2" ? "#eee" : "#eea",
-            }}
-          >
-            <BingView
-              text={selectedText}
-              onBoxClick={onBoxClick}
-              name="bing2"
-            />
-          </div>
-          <div
-            className="container-view box-item"
-            style={{
-              background: selectedOption !== "mitra2" ? "#eee" : "#eea",
-            }}
-          >
-            <MitraTextView
-              text={selectedText}
-              language="en-bo"
-              onBoxClick={onBoxClick}
-              name="mitra2"
-            />
+          <div style={{ flex: 1 }}>
+            <div
+              className="container-view box-item"
+              style={{
+                background: selectedOption !== "bing2" ? "#eee" : "#eea",
+              }}
+            >
+              <BingView
+                text={selectedText}
+                onBoxClick={onBoxClick}
+                name="bing2"
+              />
+            </div>
+            <div
+              className="container-view box-item"
+              style={{
+                background: selectedOption !== "mitra2" ? "#eee" : "#eea",
+              }}
+            >
+              <MitraTextView
+                text={selectedText}
+                language="en-bo"
+                onBoxClick={onBoxClick}
+                name="mitra2"
+              />
+            </div>
           </div>
         </div>
       </div>
