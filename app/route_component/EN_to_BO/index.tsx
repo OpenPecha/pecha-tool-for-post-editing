@@ -100,12 +100,15 @@ export default function EN_to_BO() {
               </div>
             </div>
             <form style={{ marginTop: 10 }} onSubmit={handleSubmit}>
-              <label htmlFor="prompt_1">Rewrite the following text ..</label>
-              <input
-                id="prompt_1"
-                value={prompt}
-                onChange={handleChangePrompt}
-              />
+              <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
+                <label htmlFor="prompt_1">Rewrite the following text ..</label>
+                <input
+                  id="prompt_1"
+                  value={prompt}
+                  onChange={handleChangePrompt}
+                />
+                <button type="submit">submit</button>
+              </div>
             </form>
             <div style={{ flex: 1 }}>
               <GPTView

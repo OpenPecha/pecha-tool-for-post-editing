@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { fetchDharmaMitraData, languageType } from "~/api";
-import useDebounce from "~/lib/useDebounce";
 
 interface TextViewProps {
   text: string;
@@ -11,6 +10,7 @@ interface TextViewProps {
 
 function MitraTextView({ text, language, onBoxClick, name }: TextViewProps) {
   const [data, setData] = useState("");
+  const [refresh, setRefresh] = useState(false);
   const [isLoading, setIsloading] = useState(false);
 
   useEffect(() => {
@@ -18,6 +18,7 @@ function MitraTextView({ text, language, onBoxClick, name }: TextViewProps) {
       setIsloading(true);
       fetchDharmaMitraData(text, language)
         .then((res) => {
+          console.log(res.data);
           setData(res?.data);
           setIsloading(false);
         })
@@ -25,9 +26,10 @@ function MitraTextView({ text, language, onBoxClick, name }: TextViewProps) {
           setIsloading(false);
           console.log(e);
         });
+      console.log(text);
     }
     if (text) fetchdata();
-  }, [text]);
+  }, [text, refresh]);
   return (
     <div onClick={() => onBoxClick({ text: data, name })}>
       <div
@@ -46,6 +48,11 @@ function MitraTextView({ text, language, onBoxClick, name }: TextViewProps) {
         </div>
       </div>
       <div className="box-content">{!isLoading ? data : "loading"}</div>
+      {!data && !isLoading && (
+        <div style={{ float: "right" }}>
+          <div onClick={() => setRefresh((p) => !p)}>refetch</div>
+        </div>
+      )}
     </div>
   );
 }
