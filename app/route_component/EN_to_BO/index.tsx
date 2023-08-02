@@ -41,6 +41,7 @@ export default function EN_to_BO() {
     "Rewrite the following text in plain english"
   );
   let debouncedText = useDebounce(text, 1000);
+  let debouncedSelectedText = useDebounce(selectedText, 1000);
   let debouncedPrompt = useDebounce(chatprompt, 1000);
 
   function handleChangePrompt(e) {
@@ -92,7 +93,7 @@ export default function EN_to_BO() {
                 }}
               >
                 <MitraTextView
-                  text={selectedText}
+                  text={debouncedSelectedText}
                   language="en-bo"
                   onBoxClick={onBoxClick}
                   name="mitra2"
