@@ -15,10 +15,13 @@ function TextView({
 
   return (
     <div className="container-view">
-      <div className="box-title">Source text</div>
+      <div className="box-title" style={{ padding: 5 }}>
+        Source text
+      </div>
       <textarea
         placeholder="enter/paste your text here"
         value={text!}
+        rows={4}
         onChange={handleTextChange}
       ></textarea>
     </div>

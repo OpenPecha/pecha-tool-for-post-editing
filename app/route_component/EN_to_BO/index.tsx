@@ -8,6 +8,8 @@ import { useEffect, useMemo, useState } from "react";
 import ActionButtons from "~/component/layout/ActionButtons";
 import Sidebar from "~/component/layout/Sidebar";
 import useDebounce from "~/lib/useDebounce";
+import CopyButton from "~/component/CopyButton";
+import { cleanUpSymbols } from "~/lib/cleanupText";
 export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   let url = new URL(request.url);
   let session = url.searchParams.get("session");
@@ -23,29 +25,32 @@ export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
 export default function EN_to_BO() {
   // const { text } = useLoaderData();
   const [text, setText] = useState("");
-  const [gptOutput, setgptOutput] = useState({ 1: "", 2: "" });
-  const [selectedBox, setSelectedBox] = useState(1);
   const [selectedText, setSelectedText] = useState("");
   const [finalText, setFinalText] = useState("");
-  const [selectedOption, setSelectedOption] = useState("bing1");
+  const [selectedOption, setSelectedOption] = useState("mitra1");
   function set_gpt1_result(value: string) {
-    setgptOutput({ ...gptOutput, 1: value });
-    setSelectedBox(1);
+    setSelectedText(value);
   }
-  function set_gpt2_result(value: string) {
-    setgptOutput({ ...gptOutput, 2: value });
-    setSelectedBox(2);
-  }
-  useEffect(() => {
-    setSelectedText(gptOutput[selectedBox]);
-  }, [selectedBox]);
 
   const onBoxClick = ({ name, text }: { name: string; text: string }) => {
     setSelectedOption(name);
     setFinalText(text);
   };
+  const [prompt, setPrompt] = useState(" in plain english ");
+  const [chatprompt, setChatPrompt] = useState(
+    "Rewrite the following text in plain english"
+  );
   let debouncedText = useDebounce(text, 1000);
+  let debouncedPrompt = useDebounce(chatprompt, 1000);
 
+  function handleChangePrompt(e) {
+    setPrompt(e.target.value);
+  }
+  function handleSubmit(e) {
+    e.preventDefault();
+    let newPrompt = "Rewrite the following text " + prompt;
+    setChatPrompt(newPrompt);
+  }
   return (
     <div className="main">
       <Sidebar user={null} online={[]} />
@@ -60,12 +65,55 @@ export default function EN_to_BO() {
           height: "100%",
         }}
       >
-        <div style={{ flex: 1, display: "flex", gap: 10, padding: 10 }}>
+        <div style={{ padding: 10 }}>
           <div style={{ flex: 1 }}>
             <TextView text={text} setMainText={setText} />
             <EditorView text={finalText} />
-          </div>
-          <div style={{ flex: 1 }}>
+            <div style={{ display: "flex", gap: 10 }}>
+              <div
+                className="container-view box-item"
+                style={{
+                  background: selectedOption !== "mitra1" ? "#eee" : "#eea",
+                  flex: 1,
+                }}
+              >
+                <MitraTextView
+                  text={debouncedText}
+                  language="en-bo"
+                  onBoxClick={onBoxClick}
+                  name="mitra1"
+                />
+              </div>
+              <div
+                className="container-view box-item"
+                style={{
+                  background: selectedOption !== "mitra2" ? "#eee" : "#eea",
+                  flex: 1,
+                }}
+              >
+                <MitraTextView
+                  text={selectedText}
+                  language="en-bo"
+                  onBoxClick={onBoxClick}
+                  name="mitra2"
+                />
+              </div>
+            </div>
+            <form style={{ marginTop: 10 }} onSubmit={handleSubmit}>
+              <label htmlFor="prompt_1">Rewrite the following text ..</label>
+              <input
+                id="prompt_1"
+                value={prompt}
+                onChange={handleChangePrompt}
+              />
+            </form>
+            <div style={{ flex: 1 }}>
+              <GPTView
+                text={debouncedText}
+                setContent={set_gpt1_result}
+                promptData={debouncedPrompt}
+              />
+            </div>
             <div
               className="container-view box-item"
               style={{
@@ -76,63 +124,6 @@ export default function EN_to_BO() {
                 text={debouncedText}
                 onBoxClick={onBoxClick}
                 name="bing1"
-              />
-            </div>
-            <div
-              className="container-view box-item"
-              style={{
-                background: selectedOption !== "mitra1" ? "#eee" : "#eea",
-              }}
-            >
-              <MitraTextView
-                text={debouncedText}
-                language="en-bo"
-                onBoxClick={onBoxClick}
-                name="mitra1"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div style={{ display: "flex", flex: 1, gap: 10, padding: 10 }}>
-          <div style={{ flex: 1 }}>
-            <GPTView
-              text={debouncedText}
-              formal={true}
-              setContent={set_gpt1_result}
-              isSelected={selectedBox === 1}
-            />
-            <GPTView
-              text={debouncedText}
-              formal={false}
-              setContent={set_gpt2_result}
-              isSelected={selectedBox === 2}
-            />
-          </div>
-          <div style={{ flex: 1 }}>
-            <div
-              className="container-view box-item"
-              style={{
-                background: selectedOption !== "bing2" ? "#eee" : "#eea",
-              }}
-            >
-              <BingView
-                text={selectedText}
-                onBoxClick={onBoxClick}
-                name="bing2"
-              />
-            </div>
-            <div
-              className="container-view box-item"
-              style={{
-                background: selectedOption !== "mitra2" ? "#eee" : "#eea",
-              }}
-            >
-              <MitraTextView
-                text={selectedText}
-                language="en-bo"
-                onBoxClick={onBoxClick}
-                name="mitra2"
               />
             </div>
           </div>
@@ -149,8 +140,16 @@ function EditorView({ text }: { text: string }) {
   }, [text]);
   return (
     <div className="final-box">
-      <div className="box-title">final text</div>
-      <textarea value={value} onChange={(e) => setValue(e.target.value)} />
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div className="box-title">Final:</div>
+        <CopyButton textToCopy={cleanUpSymbols(text)} />
+      </div>
+      <textarea
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        rows={4}
+        placeholder="type something above"
+      />
     </div>
   );
 }

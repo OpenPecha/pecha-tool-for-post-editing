@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import { SaveButton, SaveButtonWithTick } from "~/component/SaveButton";
 import { cleanUpSymbols } from "~/lib/cleanupText";
 
-function GPTView({ text, formal, setContent, isSelected }) {
+function GPTView({ text, setContent, promptData }) {
   const [temp, setTemp] = useState("");
-
+  const [refresh, setRefresh] = useState(false);
   useEffect(() => {
-    let prompt = `rewrite in ${
-      formal ? "formal" : "non-formal"
-    } ways : "${text}" dont add extra meaning`;
+    let prompt = `${promptData} : "${text}" `;
     let url = `/api/openai`;
     const formData = new FormData();
     formData.append("prompt", prompt);
@@ -26,11 +24,13 @@ function GPTView({ text, formal, setContent, isSelected }) {
         });
     }
     if (text && text !== "") fetchData();
-  }, [text]);
+  }, [text, promptData]);
   const handleSave = () => {
+    setRefresh(false);
     setContent(temp);
   };
   const handleChange = (e) => {
+    setRefresh(true);
     setTemp(e.target.value);
   };
   return (
@@ -40,11 +40,14 @@ function GPTView({ text, formal, setContent, isSelected }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          paddingInline: 5,
         }}
       >
-        <div className="box-title">GPT :</div>
+        <div className="box-title" style={{ width: "fit-content", padding: 5 }}>
+          <img src="/asset/ChatGPT.png" width={20} height={20} />
+        </div>
         <button onClick={handleSave}>
-          {!isSelected ? <SaveButton /> : <SaveButtonWithTick />}
+          {refresh ? <SaveButton /> : <SaveButtonWithTick />}
         </button>
       </div>
       <textarea value={temp} onChange={handleChange}></textarea>

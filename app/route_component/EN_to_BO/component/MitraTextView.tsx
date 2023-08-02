@@ -37,7 +37,13 @@ function MitraTextView({ text, language, onBoxClick, name }: TextViewProps) {
           justifyContent: "space-between",
         }}
       >
-        <div className="box-title">Mitra :</div>
+        <div className="box-title" style={{ width: "fit-content", padding: 5 }}>
+          <img
+            src="https://media.discordapp.net/attachments/959329505661554708/1136273342224138260/mitra-logo_3.png?width=662&height=662"
+            width={20}
+            height={20}
+          />
+        </div>
       </div>
       <div className="box-content">{!isLoading ? data : "loading"}</div>
     </div>

@@ -41,7 +41,13 @@ function BingView({ text, onBoxClick, name }: BingType) {
           justifyContent: "space-between",
         }}
       >
-        <div className="box-title">Bing :</div>
+        <div className="box-title">
+          <img
+            src="https://cdn.geekwire.com/wp-content/uploads/2020/10/0EVE9TeW_400x400.png"
+            width={40}
+            height={40}
+          ></img>
+        </div>
       </div>
       <div className="box-content">{!isLoading ? content : "loading"}</div>
     </div>
