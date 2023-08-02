@@ -5,23 +5,25 @@ import { cleanUpSymbols } from "~/lib/cleanupText";
 function GPTView({ text, setContent, promptData }) {
   const [temp, setTemp] = useState("");
   const [refresh, setRefresh] = useState(false);
+  const [isLoading, setIsloading] = useState(false);
+
   useEffect(() => {
     let prompt = `${promptData} : "${text}" `;
     let url = `/api/openai`;
     const formData = new FormData();
     formData.append("prompt", prompt);
     async function fetchData() {
-      fetch(url, {
+      setIsloading(true);
+      let responce = await fetch(url, {
         method: "POST",
         body: formData,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          let result = data.result;
-          let res = cleanUpSymbols(result?.trim());
-          setTemp(res);
-          setContent(res);
-        });
+      });
+      let data = await responce.json();
+      let result = data.result;
+      let res = cleanUpSymbols(result?.trim());
+      setTemp(res);
+      setIsloading(false);
+      setContent(res);
     }
     if (text && text !== "") fetchData();
   }, [text, promptData]);
@@ -50,6 +52,7 @@ function GPTView({ text, setContent, promptData }) {
           {refresh ? <SaveButton /> : <SaveButtonWithTick />}
         </button>
       </div>
+      {isLoading && <div>loading...</div>}
       <textarea value={temp} onChange={handleChange}></textarea>
     </div>
   );

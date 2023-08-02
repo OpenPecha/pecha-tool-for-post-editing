@@ -16,17 +16,9 @@ function MitraTextView({ text, language, onBoxClick, name }: TextViewProps) {
   useEffect(() => {
     async function fetchdata() {
       setIsloading(true);
-      fetchDharmaMitraData(text, language)
-        .then((res) => {
-          console.log(res.data);
-          setData(res?.data);
-          setIsloading(false);
-        })
-        .catch((e) => {
-          setIsloading(false);
-          console.log(e);
-        });
-      console.log(text);
+      let res = await fetchDharmaMitraData(text, language);
+      setData(res?.data);
+      setIsloading(false);
     }
     if (text) fetchdata();
   }, [text, refresh]);

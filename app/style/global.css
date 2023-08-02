@@ -147,3 +147,12 @@ button:disabled {
 .copy_btn:hover {
   background-color: #eee;
 }
+
+.component {
+  padding: 10px;
+}
+@media only screen and (max-width: 600px) {
+  .component {
+    margin-top: 100px;
+  }
+}
