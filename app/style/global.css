@@ -6,6 +6,9 @@
   --success-btn: #4fd364;
   --cancel-btn: #f74c4a;
 }
+main {
+  overflow: hidden;
+}
 * {
   margin: 0;
   font-family: "Lato", "Trebuchet MS", Roboto, Helvetica, Arial, sans-serif;
