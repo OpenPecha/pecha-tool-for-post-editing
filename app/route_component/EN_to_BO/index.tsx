@@ -85,7 +85,7 @@ export default function EN_to_BO() {
               <div
                 className="container-view box-item"
                 style={{
-                  background: selectedOption !== "mitra1" ? "#eee" : "#eea",
+                  background: selectedOption === "mitra1" ? "#eea" : "#eee",
                   flex: 1,
                 }}
               >
@@ -100,7 +100,7 @@ export default function EN_to_BO() {
               <div
                 className="container-view box-item"
                 style={{
-                  background: selectedOption !== "mitra2" ? "#eee" : "#eea",
+                  background: selectedOption === "mitra2" ? "#eea" : "#eee",
                   flex: 1,
                 }}
               >
