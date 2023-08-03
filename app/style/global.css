@@ -12,6 +12,7 @@ main {
 * {
   margin: 0;
   font-family: "Lato", "Trebuchet MS", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 20;
 }
 textarea {
   resize: vertical;

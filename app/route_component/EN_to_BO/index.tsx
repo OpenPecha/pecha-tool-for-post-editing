@@ -165,7 +165,9 @@ function EditorView({ text }: { text: string }) {
         <div className="box-title">Final:</div>
         <CopyButton textToCopy={cleanUpSymbols(value)} />
       </div>
-      <div contentEditable={true}>{value}</div>
+      <div contentEditable={true} style={{ padding: 10 }}>
+        {value}
+      </div>
     </div>
   );
 }
