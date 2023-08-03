@@ -122,6 +122,7 @@ export default function EN_to_BO() {
                   alignItems: "center",
                 }}
               >
+                <img src="/asset/ChatGPT.png" width={20} height={20} />
                 <label htmlFor="prompt_1">Rewrite the following text ..</label>
                 <input
                   ref={inputRef}
