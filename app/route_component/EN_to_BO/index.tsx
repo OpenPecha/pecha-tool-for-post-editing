@@ -161,8 +161,16 @@ function EditorView({ text }: { text: string }) {
   }, [text]);
   return (
     <div className="final-box">
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div className="box-title">Final:</div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          background: "#eea",
+        }}
+      >
+        <div className="box-title" style={{ padding: 5 }}>
+          Final:
+        </div>
         <CopyButton textToCopy={cleanUpSymbols(value)} />
       </div>
       <div contentEditable={true} style={{ padding: 10 }}>
