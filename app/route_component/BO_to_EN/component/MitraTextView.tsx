@@ -46,7 +46,17 @@ function MitraTextView({ text, language, setContent }: TextViewProps) {
           justifyContent: "space-between",
         }}
       >
-        <div className="box-title" style={{ width: "fit-content", padding: 5 }}>
+        <div
+          className="box-title"
+          style={{
+            width: "fit-content",
+            padding: 5,
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+          }}
+        >
+          source ➜
           <img
             src="https://media.discordapp.net/attachments/959329505661554708/1136273342224138260/mitra-logo_3.png?width=662&height=662"
             width={20}
@@ -59,7 +69,7 @@ function MitraTextView({ text, language, setContent }: TextViewProps) {
       </div>
 
       <textarea
-        value={data}
+        value={data || ""}
         onChange={handleChange}
         style={{ width: "100%", background: "white" }}
         rows={6}

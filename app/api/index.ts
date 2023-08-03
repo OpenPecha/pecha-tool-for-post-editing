@@ -36,13 +36,14 @@ export const fetchGPTData = async (sentence: string) => {
   });
   const openai = new OpenAIApi(configuration);
   try {
-    const result = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt,
+    const result = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo-16k",
+      messages: [{ role: "user", content: prompt }],
+      // prompt,
       temperature: 0.5,
-      max_tokens: 2000,
+      max_tokens: 1500,
     });
-    return result.data.choices[0].text;
+    return result.data.choices[0].message?.content;
   } catch (e) {
     console.log("error", e.response.data);
   }

@@ -5,9 +5,6 @@ import Dictionary from "~/route_component/BO_to_EN/component/Dictionary";
 import GPTview from "~/route_component/BO_to_EN/component/GPTView";
 import MitraView from "~/route_component/BO_to_EN/component/MitraTextView";
 import TextView from "~/component/TextView";
-import checkUnknown from "~/lib/checkunknown";
-import Button from "~/component/Button";
-import ActionButtons from "~/component/layout/ActionButtons";
 import Sidebar from "~/component/layout/Sidebar";
 import useDebounce from "~/lib/useDebounce";
 export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
@@ -23,11 +20,10 @@ export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
 };
 
 export default function BO_to_EN() {
-  let data = useLoaderData();
   // let text = checkUnknown(data.text);
   let [mainText, setMainText] = useState(null);
   let [mitraText, setMitraText] = useState("");
-  let [dictionary, setDictionary] = useState("");
+  let [dictionary, setDictionary] = useState(null);
   let debouncedText = useDebounce(mainText, 1000);
 
   return (

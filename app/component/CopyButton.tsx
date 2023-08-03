@@ -16,11 +16,11 @@ function CopyButton({ textToCopy }) {
 
   return (
     <div>
-      <button onClick={handleCopyClick} className="copy_btn">
+      <button onClick={handleCopyClick} className="">
         <CopySVG />
       </button>
       <span style={{ position: "absolute", left: "-9999px" }}>
-        <textarea ref={textRef} value={textToCopy} readOnly />
+        <textarea ref={textRef} value={textToCopy || ""} readOnly />
       </span>
     </div>
   );

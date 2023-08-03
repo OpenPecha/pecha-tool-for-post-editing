@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import CopyButton from "~/component/CopyButton";
 import { cleanUpSymbols } from "~/lib/cleanupText";
-import { CopySVG } from "~/style/svg/copy";
 
 function GPTview({
   text,
@@ -10,7 +9,7 @@ function GPTview({
 }: {
   text: string | null;
   mitraText: string;
-  dictionary: string;
+  dictionary: string | null;
 }) {
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);

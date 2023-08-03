@@ -15,7 +15,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     body,
   });
   let data = await res.json();
-  let words: [] = data.words;
+  let words: [] = data.words.filter(
+    (word) => word.pos !== "ADP" && word.pos !== "NO_POS" && word.pos !== "PART"
+  );
+  console.log(words);
+
   let dictionary = {};
   await Promise.all(
     words.map(async (word) => {

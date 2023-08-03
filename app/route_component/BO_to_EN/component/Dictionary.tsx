@@ -4,7 +4,7 @@ import { useFetcher } from "@remix-run/react";
 import useDebounce from "~/lib/useDebounce";
 
 function Dictionary({ setDictionary, text }) {
-  const [data, setUpdatedDictionary] = useState({});
+  const [data, setUpdatedDictionary] = useState(null);
   const [isContentChanged, setIsContentChanged] = useState(false);
   const [selectedWord, setSelectedWord] = useState(null);
   useEffect(() => {
@@ -17,12 +17,11 @@ function Dictionary({ setDictionary, text }) {
           setUpdatedDictionary(data);
         });
     }
-    console.log(text);
     if (text) fetcherdata();
   }, [text]);
 
   useEffect(() => {
-    setDictionary(JSON.stringify(data));
+    if (data) setDictionary(JSON.stringify(data));
   }, [data]);
 
   const handleChange = (key, newValue) => {
@@ -81,7 +80,7 @@ function Dictionary({ setDictionary, text }) {
             }}
             rows={10}
             onChange={(e) => handleChange(selectedWord, e.target.value)}
-            value={data[selectedWord]}
+            value={data[selectedWord] || ""}
           ></textarea>
         </div>
       )}

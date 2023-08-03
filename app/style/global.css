@@ -10,6 +10,9 @@
   margin: 0;
   font-family: "Lato", "Trebuchet MS", Roboto, Helvetica, Arial, sans-serif;
 }
+textarea {
+  resize: vertical;
+}
 .source {
   padding: 8px;
   font-size: 20px;
@@ -61,6 +64,7 @@ input {
   padding: 5px;
 }
 .container-view {
+  overflow: hidden;
   background-color: #eee;
   margin-top: 10px;
   border: 1px solid black;
@@ -110,7 +114,6 @@ button:disabled {
   background: var(--cancel-btn);
 }
 .box-item:hover {
-  background-color: #eea;
   cursor: pointer;
 }
 .box-title {

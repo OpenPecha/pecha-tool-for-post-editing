@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { SaveButton, SaveButtonWithTick } from "~/component/SaveButton";
 import { cleanUpSymbols } from "~/lib/cleanupText";
 
-function GPTView({ text, setContent, promptData }) {
+function GPTView({ text, setContent, promptData, color }) {
   const [temp, setTemp] = useState("");
   const [refresh, setRefresh] = useState(false);
   const [isLoading, setIsloading] = useState(false);
-
+  const textRef = useRef(null);
   useEffect(() => {
     let prompt = `${promptData} : "${text}" `;
     let url = `/api/openai`;
@@ -29,11 +29,11 @@ function GPTView({ text, setContent, promptData }) {
   }, [text, promptData]);
   const handleSave = () => {
     setRefresh(false);
-    setContent(temp);
+    let data = textRef.current?.innerText;
+    setContent(data);
   };
   const handleChange = (e) => {
     setRefresh(true);
-    setTemp(e.target.value);
   };
   return (
     <div className="container-view">
@@ -43,6 +43,7 @@ function GPTView({ text, setContent, promptData }) {
           alignItems: "center",
           justifyContent: "space-between",
           paddingInline: 5,
+          background: color,
         }}
       >
         <div className="box-title" style={{ width: "fit-content", padding: 5 }}>
@@ -53,7 +54,14 @@ function GPTView({ text, setContent, promptData }) {
         </button>
       </div>
       {isLoading && <div>loading...</div>}
-      <textarea value={temp} onChange={handleChange}></textarea>
+      <div
+        ref={textRef}
+        contentEditable={true}
+        onInput={handleChange}
+        style={{ paddingInline: 5, paddingBlock: 10 }}
+      >
+        {temp}
+      </div>
     </div>
   );
 }
