@@ -56,7 +56,7 @@ function MitraTextView({ text, language, setContent }: TextViewProps) {
             gap: 10,
           }}
         >
-          source ➜
+          Source ➜
           <img
             src="https://media.discordapp.net/attachments/959329505661554708/1136273342224138260/mitra-logo_3.png?width=662&height=662"
             width={20}

@@ -2,7 +2,7 @@ export function CopySVG() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      fill="#000000"
+      fill="black"
       height="20px"
       width="20px"
       version="1.1"

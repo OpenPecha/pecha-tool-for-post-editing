@@ -23,12 +23,12 @@ function TextView({
     <div className="container-view">
       <div
         className="box-title"
-        style={{ padding: 5, background: color, width: "100%" }}
+        style={{ padding: 5, backgroundColor: color!, width: "100%" }}
       >
         Source text
       </div>
       <textarea
-        style={{ resize: "vertical", fontSize: 18 }}
+        style={{ resize: "vertical", fontSize: 18, background: "white" }}
         placeholder="enter/paste your text here"
         value={text! || ""}
         rows={4}

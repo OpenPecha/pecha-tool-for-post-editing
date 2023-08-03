@@ -129,7 +129,6 @@ button:disabled {
 }
 .final-box {
   flex: 1;
-  padding: 10px;
   border: 1px solid black;
   background-color: white;
   margin-top: 20px;

@@ -38,8 +38,17 @@ function GPTview({
 
   return (
     <div className="final-box">
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div className="box-title">Final:</div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          background: "#eee",
+        }}
+      >
+        <div className="box-title" style={{ paddingInline: 5 }}>
+          Final:
+        </div>
         <CopyButton textToCopy={cleanUpSymbols(content)} />
       </div>
       {isLoading && <div className="loader">Loading</div>}
