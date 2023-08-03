@@ -17,9 +17,9 @@ function GPTview({
   useEffect(() => {
     async function fetchdata() {
       setIsLoading(true);
-      let prompt = `original text: ${text}, translated text: ${mitraText}`;
+      let prompt = `${text} , the translated text: ${mitraText}`;
       if (dictionary) prompt += `, dictionary: ${dictionary}`;
-      prompt += `make translation better from bo to en`;
+      prompt += `only contain english translated text`;
       let url = `/api/openai`;
       const formData = new FormData();
       formData.append("prompt", prompt);
