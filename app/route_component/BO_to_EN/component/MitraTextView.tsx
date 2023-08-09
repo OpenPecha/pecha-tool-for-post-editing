@@ -16,6 +16,7 @@ function MitraTextView({ text, language, setContent }: TextViewProps) {
   const [isContentChanged, setIsContentChanged] = useState(false);
 
   useEffect(() => {
+    if (!text?.endsWith("།")) text = text + "།";
     let url = "/api/mitra?sentence=" + text + "&language=" + language;
 
     async function fetchdata() {
