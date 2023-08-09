@@ -5,11 +5,9 @@ import { cleanUpSymbols } from "~/lib/cleanupText";
 function GPTview({
   text,
   mitraText,
-  dictionary,
 }: {
   text: string | null;
   mitraText: string;
-  dictionary: string | null;
 }) {
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +30,7 @@ function GPTview({
           setIsLoading(false);
         });
     }
-    if (text && mitraText && dictionary) fetchdata();
+    if (text && mitraText) fetchdata();
   }, [text, mitraText]);
 
   return (
