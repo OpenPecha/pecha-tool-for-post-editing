@@ -23,7 +23,7 @@ export default function BO_to_EN() {
   // let text = checkUnknown(data.text);
   let [mainText, setMainText] = useState(null);
   let [mitraText, setMitraText] = useState("");
-  let [dictionary, setDictionary] = useState(null);
+  // let [dictionary, setDictionary] = useState(null);
   let debouncedText = useDebounce(mainText, 1000);
 
   return (
@@ -41,11 +41,7 @@ export default function BO_to_EN() {
         >
           <div style={{ maxWidth: 600, width: "100%" }}>
             <TextView text={mainText} setMainText={setMainText} />
-            <GPTview
-              text={debouncedText}
-              mitraText={mitraText}
-              dictionary={dictionary}
-            />
+            <GPTview text={debouncedText} mitraText={mitraText} />
             <MitraView
               text={debouncedText}
               language="bo-en"
@@ -53,7 +49,6 @@ export default function BO_to_EN() {
               content={mitraText}
             />
           </div>
-          <Dictionary setDictionary={setDictionary} text={debouncedText} />
         </div>
       </div>
     </div>
