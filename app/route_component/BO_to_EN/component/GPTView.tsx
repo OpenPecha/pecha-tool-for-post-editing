@@ -18,7 +18,6 @@ function GPTview({
     async function fetchdata() {
       setIsLoading(true);
       let prompt = `${text} , the translated text: ${mitraText}`;
-      if (dictionary) prompt += `, dictionary: ${dictionary}`;
       prompt += `only contain english translated text`;
       let url = `/api/openai`;
       const formData = new FormData();
@@ -34,7 +33,7 @@ function GPTview({
         });
     }
     if (text && mitraText && dictionary) fetchdata();
-  }, [text, mitraText, dictionary]);
+  }, [text, mitraText]);
 
   return (
     <div className="final-box">
