@@ -1,4 +1,4 @@
-import { LoaderArgs, LoaderFunction } from "@remix-run/node";
+import { LoaderArgs, LoaderFunction, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import TextView from "~/component/TextView";
 import GPTView from "./component/GPTView";
@@ -13,7 +13,6 @@ import { cleanUpSymbols } from "~/lib/cleanupText";
 export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   let url = new URL(request.url);
   let session = url.searchParams.get("session");
-  let history = url.searchParams.get("history") || null;
   if (!session) return redirect("/error");
 
   let text = "my name is tashi , how are you";
@@ -24,7 +23,7 @@ export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
 
 export default function EN_to_BO() {
   // const { text } = useLoaderData();
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [text, setText] = useState("");
   const [selectedText, setSelectedText] = useState("");
   const [finalText, setFinalText] = useState("");
@@ -37,10 +36,9 @@ export default function EN_to_BO() {
     setSelectedOption(name);
     setFinalText(text);
   };
+  const prompt_start = "Rewrite the following text";
   const [prompt, setPrompt] = useState(" in plain english ");
-  const [chatprompt, setChatPrompt] = useState(
-    "Rewrite the following text in plain english"
-  );
+  const [chatprompt, setChatPrompt] = useState(`${prompt_start} ${prompt}`);
   let debouncedText = useDebounce(text, 1000);
   let debouncedSelectedText = useDebounce(selectedText, 3000);
   let debouncedPrompt = useDebounce(chatprompt, 1000);
@@ -55,38 +53,35 @@ export default function EN_to_BO() {
   }
   function adjustInputWidth() {
     const content = inputRef.current?.value;
-    const contentLength = content.length;
+    const contentLength = content?.length;
     const minWidth = 50; // Optional: You can set your desired minimum width
     // Calculate the width based on content length (you can adjust this formula as needed)
-    const newWidth = Math.max(contentLength * 8, minWidth);
+    const newWidth = Math.max(contentLength! * 8, minWidth);
     if (inputRef.current) {
       inputRef.current.style.width = newWidth + "px";
     }
   }
+  const onChangeHandler = (value: string) => {
+    setText(value);
+    setFinalText("");
+  };
   return (
-    <div className="main">
-      <Sidebar user={null} online={[]} />
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          gap: 20,
-          overflowY: "scroll",
-          width: "100%",
-          height: "100%",
-        }}
-      >
-        <div className="component">
-          <div style={{ flex: 1 }}>
-            <TextView text={text} setMainText={setText} color="#93c5fd" />
+    <div className="flex overflow-hidden h-screen flex-col md:flex-row">
+      <Sidebar user={null} title="EN->BO" />
+      <div className="mt-10 md:pt-1 md:mt-0 w-full h-[90dvh] absolute md:relative top-4 overflow-y-scroll">
+        <div className="p-2">
+          <div className="flex-1">
+            <TextView
+              text={text}
+              setMainText={onChangeHandler}
+              color="#93c5fd"
+            />
             <EditorView text={finalText} />
-            <div style={{ display: "flex", gap: 10 }}>
+            <div className="flex gap-2">
               <div
-                className="container-view box-item"
+                className="overflow-hidden mt-2 border-2 border-gray-400 shadow-sm flex-1 box-item"
                 style={{
                   background: selectedOption === "mitra1" ? "#eea" : "#eee",
-                  flex: 1,
                 }}
               >
                 <MitraTextView
@@ -98,10 +93,9 @@ export default function EN_to_BO() {
                 />
               </div>
               <div
-                className="container-view box-item"
+                className="overflow-hidden mt-2 border-2 border-gray-400 shadow-sm  box-item flex-1"
                 style={{
                   background: selectedOption === "mitra2" ? "#eea" : "#eee",
-                  flex: 1,
                 }}
               >
                 <MitraTextView
@@ -113,31 +107,34 @@ export default function EN_to_BO() {
                 />
               </div>
             </div>
-            <form style={{ marginTop: 10 }} onSubmit={handleSubmit}>
-              <div
-                style={{
-                  display: "flex",
-                  gap: 10,
-                  marginTop: 10,
-                  alignItems: "center",
-                }}
-              >
+            <form className="mt-2" onSubmit={handleSubmit}>
+              <div className="flex flex-col md:flex-row gap-2 mt-2 items-center">
                 <img src="/asset/ChatGPT.png" width={20} height={20} />
-                <label htmlFor="prompt_1">Rewrite the following text ..</label>
+                <label
+                  htmlFor="prompt_1"
+                  className="w-auto md:w-[440px]"
+                  style={{ fontSize: "clamp(15px,2vw,20px)" }}
+                >
+                  {prompt_start}{" "}
+                </label>
                 <input
                   ref={inputRef}
                   id="prompt_1"
                   value={prompt}
                   onChange={handleChangePrompt}
-                  style={{ width: "auto", minWidth: 100 }}
+                  className="w-full border border-gray-300 rounded-md p-2"
                   onInput={adjustInputWidth}
                 />
-                <button type="submit" disabled={prompt.length < 1}>
-                  submit
+                <button
+                  type="submit"
+                  disabled={prompt.length < 1}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Enter
                 </button>
               </div>
             </form>
-            <div style={{ flex: 1 }}>
+            <div className="flex-1">
               <GPTView
                 text={debouncedText}
                 setContent={set_gpt1_result}
@@ -145,7 +142,7 @@ export default function EN_to_BO() {
                 color={"#86efac"}
               />
             </div>
-            <div className="container-view box-item">
+            <div className="overflow-hidden mt-2 border-2 border-gray-400 shadow-sm box-item">
               <BingView text={debouncedText} name="bing1" />
             </div>
           </div>
@@ -169,12 +166,10 @@ function EditorView({ text }: { text: string }) {
           background: "#eea",
         }}
       >
-        <div className="box-title" style={{ padding: 5 }}>
-          Final:
-        </div>
+        <div className="box-title p-1">Final:</div>
         <CopyButton textToCopy={cleanUpSymbols(value)} />
       </div>
-      <div contentEditable={true} style={{ padding: 10 }}>
+      <div contentEditable={true} className="p-2">
         {value}
       </div>
     </div>

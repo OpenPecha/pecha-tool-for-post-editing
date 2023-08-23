@@ -9,7 +9,10 @@ import {
 } from "@remix-run/react";
 import globalStyle from "~/style/global.css";
 import { RecoilRoot } from "recoil";
+import tailwindStyle from "~/style/tailwind.css";
+
 export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: tailwindStyle },
   { rel: "stylesheet", href: globalStyle },
 ];
 

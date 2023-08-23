@@ -3,6 +3,7 @@ import { fetchDharmaMitraData, languageType } from "~/api";
 import { SaveButton, SaveButtonWithTick } from "../../../component/SaveButton";
 import _ from "lodash";
 import useDebounce from "~/lib/useDebounce";
+import { DharmaLogo } from "~/component/layout/SVGS";
 
 interface TextViewProps {
   text: string | null;
@@ -14,20 +15,26 @@ interface TextViewProps {
 function MitraTextView({ text, language, setContent }: TextViewProps) {
   const [data, setData] = useState("");
   const [isContentChanged, setIsContentChanged] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!text?.endsWith("།")) text = text + "།";
-    let url = "/api/mitra?sentence=" + text + "&language=" + language;
+    if (text) {
+      if (!text?.endsWith("།")) text = text + "།";
+      let url = "/api/mitra?sentence=" + text + "&language=" + language;
 
-    async function fetchdata() {
-      fetch(url)
-        .then((data) => data.json())
-        .then((res) => {
-          setData(res.data.data);
-          setContent(res.data.data);
-        });
+      async function fetchdata() {
+        setIsLoading(true);
+        fetch(url)
+          .then((data) => data.json())
+          .then((res) => {
+            setData(res.data.data);
+            setContent(res.data.data);
+            setIsLoading(false);
+          })
+          .catch((e) => setIsLoading(false));
+      }
+      if (text) fetchdata();
     }
-    if (text) fetchdata();
   }, [text]);
 
   function handleSave() {
@@ -39,30 +46,15 @@ function MitraTextView({ text, language, setContent }: TextViewProps) {
     setIsContentChanged(true);
   }
   return (
-    <div className="container-view">
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div
-          className="box-title"
-          style={{
-            width: "fit-content",
-            padding: 5,
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-          }}
-        >
+    <div className="overflow-hidden mt-2 border-2 border-gray-400 shadow-sm">
+      <div className="flex items-center justify-between bg-green-200">
+        <div className="box-title w-fit p-1 flex items-center gap-2">
           Source ➜
-          <img
-            src="https://media.discordapp.net/attachments/959329505661554708/1136273342224138260/mitra-logo_3.png?width=662&height=662"
-            width={20}
-            height={20}
-          />
+          {isLoading ? (
+            <span className="loading loading-spinner loading-md"></span>
+          ) : (
+            <DharmaLogo />
+          )}
         </div>
         <button onClick={handleSave}>
           {isContentChanged ? <SaveButton /> : <SaveButtonWithTick />}
@@ -72,9 +64,9 @@ function MitraTextView({ text, language, setContent }: TextViewProps) {
       <textarea
         value={data || ""}
         onChange={handleChange}
-        style={{ width: "100%", background: "white" }}
+        className="w-full bg-white border-none text-[20px] "
         rows={6}
-      ></textarea>
+      />
     </div>
   );
 }

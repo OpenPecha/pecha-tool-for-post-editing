@@ -1,12 +1,15 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { SaveButton, SaveButtonWithTick } from "../../../component/SaveButton";
-import { useFetcher } from "@remix-run/react";
-import useDebounce from "~/lib/useDebounce";
+import { useEffect, useState } from "react";
+import { SaveButton, SaveButtonWithTick } from "~/component/SaveButton";
 
-function Dictionary({ setDictionary, text }) {
-  const [data, setUpdatedDictionary] = useState(null);
+type DictionaryProps = {
+  setDictionary: (data: string) => void;
+  text: string;
+};
+
+function Dictionary({ setDictionary, text }: DictionaryProps) {
+  const [data, setUpdatedDictionary] = useState<null | string[]>(null);
   const [isContentChanged, setIsContentChanged] = useState(false);
-  const [selectedWord, setSelectedWord] = useState(null);
+  const [selectedWord, setSelectedWord] = useState<null | string>(null);
   useEffect(() => {
     async function fetcherdata() {
       let url = "/api/dictionary/" + text;
@@ -24,7 +27,7 @@ function Dictionary({ setDictionary, text }) {
     if (data) setDictionary(JSON.stringify(data));
   }, [data]);
 
-  const handleChange = (key, newValue) => {
+  const handleChange = (key: string, newValue: string) => {
     setUpdatedDictionary((prev) => {
       return { ...prev, [key]: newValue };
     });
@@ -35,12 +38,12 @@ function Dictionary({ setDictionary, text }) {
     setDictionary(JSON.stringify(newDictionary));
     setIsContentChanged(false);
   };
-  const handleWordClick = (word) => {
+  const handleWordClick = (word: string) => {
     setSelectedWord(word);
   };
 
   return (
-    <div className="dictionary-container container-view">
+    <div className="dictionary-container overflow-hidden mt-2 border-2 border-gray-400 shadow-sm">
       <div
         style={{
           display: "flex",
@@ -72,16 +75,11 @@ function Dictionary({ setDictionary, text }) {
         <div className="selected-word-meaning" style={{ width: "100%" }}>
           <h3 style={{ fontWeight: "bold" }}>{selectedWord}</h3>
           <textarea
-            style={{
-              fontSize: 15,
-              width: "100%",
-              height: "100%",
-              background: "white",
-            }}
+            className="text-[15px] w-full h-full bg-white overflow-hidden"
             rows={10}
             onChange={(e) => handleChange(selectedWord, e.target.value)}
             value={data[selectedWord] || ""}
-          ></textarea>
+          />
         </div>
       )}
     </div>

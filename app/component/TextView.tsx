@@ -1,41 +1,51 @@
-import { useRef, useState } from "react";
-import _ from "lodash";
+import { useRef, useEffect } from "react";
+import debounce from "lodash/debounce";
+type TextViewType = {
+  text: string;
+  setMainText: (data: string) => void;
+  color?: string;
+};
+function TextView({ text, setMainText, color }: TextViewType) {
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
-function TextView({
-  text = "",
-  setMainText,
-  color,
-}: {
-  text: string | null;
-  setMainText: (data: string | null) => void;
-  color: string | null;
-}) {
+  useEffect(() => {
+    adjustTextAreaHeight();
+  }, [text]);
+
   const handleTextChange = (e) => {
     const value = e.target.value;
-    setMainText(value); // Call the debounced function to update the main text after the delay
+    setMainText(value);
   };
-  const textAreaRef = useRef(null);
-  function adjustTextAreaHeight() {
-    textAreaRef.current.style.height = "auto"; // Reset the height to auto before calculating the new height
-    textAreaRef.current.style.height = textAreaRef.current.scrollHeight + "px"; // Set the new height to match the content
-  }
+
+  const adjustTextAreaHeight = () => {
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = "auto";
+      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
+    }
+  };
+
+  const debouncedAdjustHeight = useRef(
+    debounce(adjustTextAreaHeight, 300)
+  ).current;
+
   return (
-    <div className="container-view">
+    <div className="overflow-hidden mt-2 border-2 border-gray-400 shadow-sm">
       <div
         className="box-title"
-        style={{ padding: 5, backgroundColor: color!, width: "100%" }}
+        style={{ padding: 5, backgroundColor: color, width: "100%" }}
       >
         Source text
       </div>
       <textarea
-        style={{ resize: "vertical", fontSize: 18, background: "white" }}
-        placeholder="enter/paste your text here"
-        value={text! || ""}
+        className="bg-white overflow-hidden w-full border-none"
+        style={{ resize: "vertical", fontSize: 18 }}
+        placeholder="Enter/paste your text here"
+        value={text || ""}
         rows={4}
         onChange={handleTextChange}
         ref={textAreaRef}
-        onInput={adjustTextAreaHeight}
-      ></textarea>
+        onInput={debouncedAdjustHeight}
+      />
     </div>
   );
 }

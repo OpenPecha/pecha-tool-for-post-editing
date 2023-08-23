@@ -1,12 +1,20 @@
 import React, { useEffect, useState, useRef } from "react";
 import { SaveButton, SaveButtonWithTick } from "~/component/SaveButton";
+import { GptImage } from "~/component/layout/SVGS";
 import { cleanUpSymbols } from "~/lib/cleanupText";
 
-function GPTView({ text, setContent, promptData, color }) {
+type GPTViewProps = {
+  text: string;
+  setContent: (data: string) => void;
+  promptData: string;
+  color: string;
+};
+
+function GPTView({ text, setContent, promptData, color }: GPTViewProps) {
   const [temp, setTemp] = useState("");
   const [refresh, setRefresh] = useState(false);
   const [isLoading, setIsloading] = useState(false);
-  const textRef = useRef(null);
+  const textRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     let prompt = `${promptData} : "${text}" `;
     let url = `/api/openai`;
@@ -30,35 +38,34 @@ function GPTView({ text, setContent, promptData, color }) {
   const handleSave = () => {
     setRefresh(false);
     let data = textRef.current?.innerText;
-    setContent(data);
+    setContent(data!);
   };
-  const handleChange = (e) => {
+  const handleChange = () => {
     setRefresh(true);
   };
   return (
-    <div className="container-view">
+    <div className="overflow-hidden mt-2 border-2 border-gray-400 shadow-sm">
       <div
+        className="flex items-center justify-between p-1 "
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingInline: 5,
           background: color,
         }}
       >
-        <div className="box-title" style={{ width: "fit-content", padding: 5 }}>
-          <img src="/asset/ChatGPT.png" width={20} height={20} />
+        <div className="box-title w-fit p-1">
+          <GptImage />
         </div>
         <button onClick={handleSave}>
           {refresh ? <SaveButton /> : <SaveButtonWithTick />}
         </button>
       </div>
-      {isLoading && <div>loading...</div>}
+      {isLoading && (
+        <span className="loading loading-spinner loading-md"></span>
+      )}
       <div
         ref={textRef}
         contentEditable={true}
         onInput={handleChange}
-        style={{ paddingInline: 5, paddingBlock: 10 }}
+        className="px-1 py-2"
       >
         {temp}
       </div>

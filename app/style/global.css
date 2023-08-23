@@ -1,14 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato,wght@1,300&family=Roboto+Condensed&display=swap");
-@import "sidebar.css";
 :root {
   --purple: #583fcf;
   --normal-btn: #b9b9b9;
   --success-btn: #4fd364;
   --cancel-btn: #f74c4a;
 }
-main {
-  overflow: hidden;
-}
+
 * {
   margin: 0;
   font-family: "Lato", "Trebuchet MS", Roboto, Helvetica, Arial, sans-serif;
@@ -17,67 +14,10 @@ main {
 textarea {
   resize: vertical;
 }
-.source {
-  padding: 8px;
-  font-size: 20px;
-  background-color: #eee;
-  width: fit-content;
-  border: 1px solid gray;
-}
-.textview {
-  padding: 10px;
-  font-size: 20px;
-  background-color: #eee;
-  width: fit-content;
-  margin: 10px;
-  border: 1px solid gray;
-}
 
-.dictionary-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  border: 1px solid black;
-  padding: 10px;
-  max-width: 400px;
-}
-
-.dictionary-item {
-  margin-bottom: 10px;
-}
-
-.dictionary-key {
-  cursor: pointer;
-  display: flex;
-  gap: 5px;
-  align-items: center;
-  margin-bottom: 5px;
-  flex-wrap: wrap;
-}
-.dictionary-row {
-  background-color: #eea;
-  border: 1px solid black;
-  padding: 5px;
-}
-.dictionary-row span {
-  min-width: 100px;
-  margin-right: 10px;
-}
-
-input {
-  padding: 5px;
-}
-.container-view {
-  overflow: hidden;
-  background-color: #eee;
-  margin-top: 10px;
-  border: 1px solid black;
-}
-.container-view textarea {
+textarea:focus {
   border: none;
-  background-color: transparent;
-  font-size: 20px;
-  width: 100%;
+  outline: none;
 }
 .save-btn {
   cursor: pointer;

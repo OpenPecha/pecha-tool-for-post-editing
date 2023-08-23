@@ -13,6 +13,7 @@ function GPTview({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (text?.length === 0) return setContent("");
     async function fetchdata() {
       setIsLoading(true);
       let prompt = `Edit the following without adding information: ${mitraText} `;
@@ -34,20 +35,13 @@ function GPTview({
 
   return (
     <div className="final-box">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          background: "#eee",
-        }}
-      >
-        <div className="box-title" style={{ paddingInline: 5 }}>
-          Final:
-        </div>
+      <div className="flex items-center justify-between bg-yellow-100">
+        <div className="box-title px-2">Final:</div>
         <CopyButton textToCopy={cleanUpSymbols(content)} />
       </div>
-      {isLoading && <div className="loader">Loading</div>}
+      {isLoading && (
+        <span className="loading loading-spinner loading-md"></span>
+      )}
       {!isLoading && (
         <div className="box-content" style={{ maxWidth: "95%" }}>
           {cleanUpSymbols(content) || "Enter something in Source"}

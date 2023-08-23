@@ -1,81 +1,53 @@
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
-import truncateText from "~/lib/truncate";
-import { Cross, Hamburger, Tick } from "./SVGS";
+import TextInfo from "./TextInfo";
+import { Hamburger } from "./SVGS";
 
-interface sidebarProps {
-  user: any;
-  online: any[];
-}
+export type historyText = {
+  id: number;
+  reviewed: boolean;
+};
 
-function Sidebar({ user, online }: sidebarProps) {
-  let data = useLoaderData();
-  let text = data.text;
+function Sidebar({ user, title }: { user: any; title: string }) {
   let [openMenu, setOpenMenu] = useState(false);
-  return (
-    <div className="header">
-      <div className="sidebar_title" onClick={() => setOpenMenu(true)}>
-        <Hamburger />
-        <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-          Post editor
-        </Link>
-      </div>
-      <div className={`sidebar ${openMenu ? "open" : ""}`}>
-        <div className={`sidebar_menu`}>
-          <div className="sidebar-Header">
-            <div className="title"> Post editor</div>
-            <div className="close" onClick={() => setOpenMenu(false)}>
-              x
-            </div>
-          </div>
-          <div>
-            <span className="info">User :</span> {user?.username}
-          </div>
-          <div>
-            <span className="info">text id :</span> {text?.id}
-          </div>
-          <div>
-            <span className="info">Approved :</span> {user?.text?.length}
-          </div>
-          <div>
-            <span className="info">Rejected :</span>{" "}
-            {user?.rejected_list?.length}
-          </div>
-          <div>
-            <span className="info">Ignored :</span> {user?.ignored_list?.length}
-          </div>
-          <div>
-            <span className="info">online User :</span> {online?.length}
-          </div>
+
+  function SidebarHeader() {
+    return (
+      <div className="flex bg-[#384451] px-2 py-3 items-center justify-between md:hidden ">
+        <div>About</div>
+        <div className="cursor-pointer p-2" onClick={() => setOpenMenu(false)}>
+          x
         </div>
-        <div className="sidebar_menu " style={{ flex: 1 }}>
-          <div className="sidebar-section-title">History</div>
-          <div className="history-container">
-            {user?.text.map((text) => {
-              return (
-                <History
-                  content={text?.modified_text}
-                  user={user}
-                  id={text?.id}
-                  key={text.id}
-                  onClick={() => setOpenMenu(false)}
-                  icon={<Tick />}
-                />
-              );
-            })}
-            {user?.rejected_list.map((text: Text) => {
-              return (
-                <History
-                  content={text?.original_text}
-                  user={user}
-                  id={text.id}
-                  key={text.id}
-                  onClick={() => setOpenMenu(false)}
-                  icon={<Cross />}
-                />
-              );
-            })}
-          </div>
+      </div>
+    );
+  }
+  return (
+    <div className="flex flex-col">
+      <div
+        className=" flex px-2 py-3 text-white bg-gray-600 text-lg font-semibold items-center  gap-2 "
+        onClick={() => setOpenMenu(true)}
+      >
+        <Hamburger />
+        {title}
+      </div>
+      <div
+        className={`flex flex-col text-white bg-[#54606e] overflow-y-auto overflow-x-hidden max-h-[100vh] transition-all -translate-x-full z-30 ${
+          openMenu ? "block translate-x-0" : ""
+        } min-h-[100vh] w-[260px] md:translate-x-0`}
+      >
+        <div className="px-2 flex gap-2 flex-col border-b-2 border-b-[#384451] mb-3 pb-2 mt-2 ">
+          <SidebarHeader />
+
+          <TextInfo>User : {user?.username}</TextInfo>
+          <TextInfo>Approved : {user?.text?.length}</TextInfo>
+          <TextInfo>Rejected :{user?.rejected_list?.length}</TextInfo>
+          <TextInfo>Ignored : {user?.ignored_list?.length}</TextInfo>
+          <TextInfo>
+            Reviewed : {user?.text.filter((r) => r.reviewed)?.length}
+          </TextInfo>
+        </div>
+        <div className="flex-1">
+          <div className="text-sm mb-2 font-bold">History</div>
         </div>
       </div>
     </div>
@@ -83,15 +55,3 @@ function Sidebar({ user, online }: sidebarProps) {
 }
 
 export default Sidebar;
-
-function History({ content, id, user, onClick, icon }: any) {
-  return (
-    <Link
-      to={`/?session=${user.username}&history=${id}`}
-      className="history-item"
-      onClick={onClick}
-    >
-      {truncateText(content, 40)} {icon}
-    </Link>
-  );
-}
