@@ -11,14 +11,18 @@ function Dictionary({ setDictionary, text }: DictionaryProps) {
   const [isContentChanged, setIsContentChanged] = useState(false);
   const [selectedWord, setSelectedWord] = useState<null | string>(null);
   const [selectValue, setSelectValue] = useState<[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     async function fetcherdata() {
+      setIsLoading(true);
       let url = "/api/dictionary/" + text;
       fetch(url)
         .then((res) => res.json())
         .then((data) => {
           setUpdatedDictionary(data);
-        });
+          setIsLoading(false);
+        })
+        .catch((err) => setIsLoading(false));
     }
     if (text) fetcherdata();
   }, [text]);
@@ -56,28 +60,33 @@ function Dictionary({ setDictionary, text }: DictionaryProps) {
   }, [data]);
   return (
     <div className="dictionary-container flex-1 overflow-hidden mt-2 border-2 border-gray-400 shadow-sm">
-      <div className="flex items-center justify-between p-2 w-full">
-        <h2>Dictionary</h2>
+      <div className="flex items-center justify-between p-1 w-full bg-green-300">
+        <h2 className="box-title px-2">Dictionary</h2>
         <button onClick={handleSave}>
           {isContentChanged ? <SaveButton /> : <SaveButtonWithTick />}
         </button>
       </div>
-      <Select
-        primaryColor="green"
-        value={selectValue}
-        onChange={handleSelectChange}
-        options={options}
-        isMultiple
-        isSearchable
-      />
+      <div className="p-1">
+        <Select
+          loading={isLoading}
+          isDisabled={isLoading}
+          primaryColor="green"
+          value={selectValue}
+          onChange={handleSelectChange}
+          options={options}
+          isMultiple
+          isSearchable
+          searchInputPlaceholder="search dictionary"
+        />
+      </div>
       <div className="flex gap-2 p-2">
-        <div className="flex flex-col gap-2 mt-2 w-fit">
+        <div className="flex flex-col gap-2 mt-2 min-w-fit">
           {selectValue?.length > 0 &&
             selectValue.map(({ value: key }) => (
               <div key={key} onClick={() => handleWordClick(key)}>
                 <div
                   className={`shadow-sm cursor-pointer px-1 ${
-                    selectedWord === key ? "bg-yellow-400" : ""
+                    selectedWord === key ? "bg-yellow-400" : "bg-yellow-200"
                   }`}
                 >
                   <span>{key}</span>
