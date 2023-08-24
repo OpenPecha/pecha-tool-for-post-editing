@@ -5,18 +5,22 @@ import { cleanUpSymbols } from "~/lib/cleanupText";
 function GPTview({
   text,
   mitraText,
+  dictionary,
 }: {
   text: string | null;
   mitraText: string;
+  dictionary: {};
 }) {
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
   useEffect(() => {
     if (text?.length === 0) return setContent("");
     async function fetchdata() {
       setIsLoading(true);
       let prompt = `Edit the following without adding information: ${mitraText} `;
+      if (!!dictionary) {
+        prompt += `, ${dictionary} use this dictionary`;
+      }
       let url = `/api/openai`;
       const formData = new FormData();
       formData.append("prompt", prompt);
@@ -31,7 +35,7 @@ function GPTview({
         });
     }
     if (text && mitraText) fetchdata();
-  }, [text, mitraText]);
+  }, [text, mitraText, dictionary]);
 
   return (
     <div className="final-box">
