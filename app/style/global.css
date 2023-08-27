@@ -102,3 +102,33 @@ button:disabled {
     margin-top: 100px;
   }
 }
+
+.space {
+  background-color: hsla(39, 100%, 68%, 1);
+  word-spacing: 0.5ch;
+  margin-inline: 3px;
+  cursor: pointer;
+  display: inline-block;
+  transform: translateY(17px);
+  border: 1px solid gray;
+  width: 15px;
+  height: 20px;
+}
+
+.space:hover {
+  background-color: hsla(40, 24%, 43%, 0.8);
+}
+.seg:hover {
+  background-color: yellow;
+  cursor: pointer;
+}
+
+.ProseMirror:focus {
+  outline: none;
+}
+.ProseMirror {
+  padding: 10px;
+}
+.ProseMirror span {
+  font-size: 26px;
+}

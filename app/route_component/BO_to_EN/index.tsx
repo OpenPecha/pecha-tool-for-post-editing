@@ -7,6 +7,7 @@ import MitraView from "~/route_component/BO_to_EN/component/MitraTextView";
 import TextView from "~/component/TextView";
 import Sidebar from "~/component/layout/Sidebar";
 import useDebounce from "~/lib/useDebounce";
+import Source from "./component/Source";
 export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   let url = new URL(request.url);
   let session = url.searchParams.get("session");
@@ -31,11 +32,7 @@ export default function BO_to_EN() {
       <div className="mt-10 md:mt-2 h-[90vh] overflow-y-scroll w-full absolute md:relative top-4">
         <div className="flex justify-around flex-wrap gap-4 p-2">
           <div className="max-w-[600px] w-full">
-            <TextView
-              text={mainText}
-              setMainText={setMainText}
-              color="#93c5fd"
-            />
+            <Source text={mainText} setMainText={setMainText} />
             <GPTview
               text={debouncedText}
               mitraText={mitraText}
@@ -48,7 +45,7 @@ export default function BO_to_EN() {
               content={mitraText}
             />
           </div>
-          <Dictionary text={mainText} setDictionary={setDictionary} />
+          {/* <Dictionary text={mainText} setDictionary={setDictionary} /> */}
         </div>
       </div>
     </div>

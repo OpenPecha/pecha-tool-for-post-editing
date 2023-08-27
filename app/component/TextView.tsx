@@ -4,8 +4,9 @@ type TextViewType = {
   text: string;
   setMainText: (data: string) => void;
   color?: string;
+  children?: React.ReactNode;
 };
-function TextView({ text, setMainText, color }: TextViewType) {
+function TextView({ text, setMainText, color, children }: TextViewType) {
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
@@ -46,6 +47,7 @@ function TextView({ text, setMainText, color }: TextViewType) {
         ref={textAreaRef}
         onInput={debouncedAdjustHeight}
       />
+      {children}
     </div>
   );
 }
