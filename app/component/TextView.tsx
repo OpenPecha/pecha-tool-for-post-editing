@@ -30,7 +30,7 @@ function TextView({ text, setMainText, color, children }: TextViewType) {
   ).current;
 
   return (
-    <div className="overflow-hidden mt-2 border-2 border-gray-400 shadow-sm">
+    <div className="overflow-hidden  border-2 border-gray-400 shadow-sm">
       <div
         className="box-title"
         style={{ padding: 5, backgroundColor: color, width: "100%" }}

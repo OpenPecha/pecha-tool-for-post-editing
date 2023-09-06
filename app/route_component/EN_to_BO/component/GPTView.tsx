@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { Loading } from "~/component/Loading";
 import { SaveButton, SaveButtonWithTick } from "~/component/SaveButton";
 import { GptImage } from "~/component/layout/SVGS";
 import { cleanUpSymbols } from "~/lib/cleanupText";
@@ -58,9 +59,7 @@ function GPTView({ text, setContent, promptData, color }: GPTViewProps) {
           {refresh ? <SaveButton /> : <SaveButtonWithTick />}
         </button>
       </div>
-      {isLoading && (
-        <span className="loading loading-spinner loading-md"></span>
-      )}
+      {isLoading && <Loading />}
       <div
         ref={textRef}
         contentEditable={true}

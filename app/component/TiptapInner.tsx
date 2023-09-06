@@ -2,10 +2,9 @@ import { useCurrentEditor } from "@tiptap/react";
 import React, { useEffect } from "react";
 import insertHTMLonText from "~/lib/insertHtmlOnText";
 
-function TiptapInner({ setEdit }: any) {
+function TiptapInner({ setDictionaryData }: any) {
   let { editor } = useCurrentEditor();
   const content = editor?.getText();
-
   useEffect(() => {
     if (editor) {
       const segments = document.querySelectorAll(".seg");
@@ -73,12 +72,14 @@ function TiptapInner({ setEdit }: any) {
           }, 300);
         }, 200);
       };
+
       segments.forEach((segment, i) => {
         const event = {
           segment,
           listener: handleSegmentClick,
         };
         segment.addEventListener("click", event.listener);
+
         events[i] = event;
       });
 
@@ -90,13 +91,22 @@ function TiptapInner({ setEdit }: any) {
     }
   }, [editor, content]);
 
+  function handleSave() {
+    let innerText = editor?.getText();
+    let word_array = innerText?.split(" ") ?? [];
+    let temp_Data = word_array?.map((word) => ({ word, definition: null }));
+    setDictionaryData(temp_Data);
+  }
+
   return (
-    <div className="box-title flex justify-between text-sm p-1 bg-[#93c5fd] w-full">
-      <div className="text-sm">Source text</div>
-      <button className="text-sm" onClick={() => setEdit(true)}>
-        edit
-      </button>
-    </div>
+    <>
+      <div className="box-title flex justify-between text-sm p-1 bg-[#93c5fd] w-full">
+        <div className="text-sm">Source text</div>
+        <button className="text-sm" onClick={handleSave}>
+          save
+        </button>
+      </div>
+    </>
   );
 }
 

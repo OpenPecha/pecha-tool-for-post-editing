@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchDharmaMitraData, languageType } from "~/api";
+import { Loading } from "~/component/Loading";
 import { DharmaLogo, GptImage } from "~/component/layout/SVGS";
 
 interface TextViewProps {
@@ -38,15 +39,13 @@ function MitraTextView({
         }}
       >
         <div className="box-title w-fit p-1 flex items-center gap-2">
-          {color === "#86efac" ? <GptImage /> : "source "}➜
-          {isLoading ? (
-            <span className="loading loading-spinner loading-md"></span>
-          ) : (
-            <DharmaLogo />
-          )}
+          {color === "#86efac" ? <GptImage /> : "source "}➜<DharmaLogo />
         </div>
       </div>
-      <div className="box-content h-[80%]">{data}</div>
+      <div className="box-content h-[80%]">
+        {isLoading && <Loading />}
+        {data}
+      </div>
     </div>
   );
 }

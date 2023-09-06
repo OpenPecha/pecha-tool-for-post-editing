@@ -1,43 +1,54 @@
-import {
-  BubbleMenu,
-  EditorContent,
-  EditorProvider,
-  useCurrentEditor,
-} from "@tiptap/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TextView from "~/component/TextView";
 import TiptapEditor from "~/component/TiptapEditor";
-import insertHTMLonText from "~/lib/insertHtmlOnText";
-import { editorProps } from "~/lib/tiptapWordSegmentor/events";
-import {
-  extensions,
-  useEditorTiptap,
-} from "~/lib/tiptapWordSegmentor/useEditorTiptap";
 
-type SourceProps = { text: string; setMainText: (text: string) => void };
+type SourceProps = {
+  text: string;
+  setMainText: (text: string) => void;
+  setDictionary: (text: {}) => void;
+};
 
-function Source({ text, setMainText }: SourceProps) {
+function Source({ text, setMainText, setDictionary }: SourceProps) {
   let [sourceText, setSourceText] = useState<string>("");
   let [edit, setEdit] = useState<boolean>(true);
   let handleMainTextChange = (value) => {
     setSourceText(value);
     setMainText(value);
   };
-
-  if (edit)
-    return (
-      <>
+  return (
+    <>
+      <div className="tabs">
+        <button
+          type="button"
+          onClick={() => setEdit(true)}
+          className={`tab tab-sm tab-lifted ${edit && "tab-active"}`}
+        >
+          Source
+        </button>
+        <button
+          type="button"
+          disabled={sourceText === ""}
+          className={`tab tab-sm tab-lifted ${!edit && "tab-active"}`}
+          onClick={() => setEdit(false)}
+        >
+          Dictionary
+        </button>
+      </div>
+      {edit ? (
         <TextView
           text={sourceText}
           setMainText={handleMainTextChange}
           color="#93c5fd"
-        >
-          <button onClick={() => setEdit(false)}>save</button>
-        </TextView>
-      </>
-    );
-  let text_content = insertHTMLonText(sourceText);
-  return <TiptapEditor text_content={text_content} setEdit={setEdit} />;
+        ></TextView>
+      ) : (
+        <TiptapEditor
+          sourceText={sourceText}
+          setEdit={setEdit}
+          setDictionary={setDictionary}
+        />
+      )}
+    </>
+  );
 }
 
 export default Source;
