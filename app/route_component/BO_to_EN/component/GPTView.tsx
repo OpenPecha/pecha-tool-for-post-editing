@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import CopyButton from "~/component/CopyButton";
+import { Loading } from "~/component/Loading";
 import { cleanUpSymbols } from "~/lib/cleanupText";
 
 function GPTview({
@@ -9,7 +10,7 @@ function GPTview({
 }: {
   text: string | null;
   mitraText: string;
-  dictionary: {};
+  dictionary: any;
 }) {
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -17,9 +18,11 @@ function GPTview({
     if (text?.length === 0) return setContent("");
     async function fetchdata() {
       setIsLoading(true);
-      let prompt = `Edit the following without adding information: ${mitraText} `;
+      let prompt = `[paste the result here] ,Edit the following without adding information: ${mitraText} `;
       if (!!dictionary) {
-        prompt += `, ${dictionary} use this dictionary`;
+        prompt += `[please use this data for dictionary ${JSON.stringify(
+          dictionary
+        )} ]`;
       }
       let url = `/api/openai`;
       const formData = new FormData();
@@ -43,9 +46,7 @@ function GPTview({
         <div className="box-title px-2">Final:</div>
         <CopyButton textToCopy={cleanUpSymbols(content)} />
       </div>
-      {isLoading && (
-        <span className="loading loading-spinner loading-md"></span>
-      )}
+      {isLoading && <Loading />}
       {!isLoading && (
         <div className="box-content" style={{ maxWidth: "95%" }}>
           {cleanUpSymbols(content) || "Enter something in Source"}

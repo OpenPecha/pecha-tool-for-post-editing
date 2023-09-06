@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Loading } from "~/component/Loading";
 
 type BingType = {
   text: string;
@@ -47,7 +48,7 @@ function BingView({ text, name }: BingType) {
           ></img>
         </div>
       </div>
-      <div style={{ padding: 10 }}>{!isLoading ? content : "loading"}</div>
+      <div style={{ padding: 10 }}>{!isLoading ? content : <Loading />}</div>
     </div>
   );
 }

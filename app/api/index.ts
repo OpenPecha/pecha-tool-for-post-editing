@@ -25,7 +25,7 @@ export const fetchDharmaMitraData = async (
     let res = await response.text();
     return convertToJSON(res);
   } catch (e) {
-    console.log(e);
+    throw new Error(e + "dharma metra error");
   }
 };
 

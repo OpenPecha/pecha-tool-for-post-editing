@@ -4,8 +4,9 @@ type TextViewType = {
   text: string;
   setMainText: (data: string) => void;
   color?: string;
+  children?: React.ReactNode;
 };
-function TextView({ text, setMainText, color }: TextViewType) {
+function TextView({ text, setMainText, color, children }: TextViewType) {
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
@@ -29,7 +30,7 @@ function TextView({ text, setMainText, color }: TextViewType) {
   ).current;
 
   return (
-    <div className="overflow-hidden mt-2 border-2 border-gray-400 shadow-sm">
+    <div className="overflow-hidden  border-2 border-gray-400 shadow-sm">
       <div
         className="box-title"
         style={{ padding: 5, backgroundColor: color, width: "100%" }}
@@ -46,6 +47,7 @@ function TextView({ text, setMainText, color }: TextViewType) {
         ref={textAreaRef}
         onInput={debouncedAdjustHeight}
       />
+      {children}
     </div>
   );
 }
