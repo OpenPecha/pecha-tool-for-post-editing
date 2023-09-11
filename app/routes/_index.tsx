@@ -1,5 +1,5 @@
 import type { V2_MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
+import { Link, useOutletContext } from "@remix-run/react";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -9,30 +9,20 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export default function Index() {
-  let mainStyle = {
-    display: "flex",
-    flexDirection: "column",
-    width: "100dvw",
-    height: "100dvh",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "1rem",
-  };
-  let link = {
-    textDecoration: "none",
-    color: "inherit",
-    backgroundColor: "#eee",
-    padding: "1rem",
-    borderRadius: "1rem",
-  };
-
+  let className = "btn ";
+  const user = useOutletContext();
+  const username = user?.username;
   return (
-    <div style={mainStyle}>
-      <Link to="/bo2en?session=temp" style={link}>
-        བོད་ཡིག་ to English
+    <div className="w-full h-[100dvh] flex justify-center gap-3 items-center">
+      <Link to={"/bo2en?session=" + username} className={className}>
+        བོད་ཡིག་
+        <div>to</div>
+        English
       </Link>
-      <Link to="/en2bo?session=temp" style={link}>
-        ENGLISH to བོད་ཡིག་
+      <Link to={"/en2bo?session=" + username} className={className}>
+        ENGLISH
+        <div>to</div>
+        བོད་ཡིག་
       </Link>
     </div>
   );

@@ -4,38 +4,38 @@ import { SaveButton, SaveButtonWithTick } from "../../../component/SaveButton";
 import _ from "lodash";
 import { DharmaLogo } from "~/component/layout/SVGS";
 import { Loading } from "~/component/Loading";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { mainTextState, mitraTextState } from "../state";
+import useDebounce from "~/lib/useDebounce";
 
-interface TextViewProps {
-  text: string | null;
-  language: languageType;
-  setContent: (data: string) => void;
-  content: string;
-}
+interface TextViewProps {}
 
-function MitraTextView({ text, language, setContent }: TextViewProps) {
+function MitraTextView({}: TextViewProps) {
+  const text = useRecoilValue(mainTextState);
   const [data, setData] = useState("");
+  const setMitraText = useSetRecoilState(mitraTextState);
   const [isContentChanged, setIsContentChanged] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  let debouncedText = useDebounce(text, 1000);
 
   useEffect(() => {
-    if (text) {
-      if (!text?.endsWith("།")) text = text + "།";
-      text = text + " ";
+    if (debouncedText) {
+      if (!debouncedText?.endsWith("།")) debouncedText = debouncedText + "།";
+      debouncedText = debouncedText + " ";
 
       async function fetchdata(text: string) {
         setIsLoading(true);
         let res = await fetchDharmaMitraData(text, "bo-en");
-        console.log(res);
         setData(res?.data);
-        setContent(res?.data);
+        setMitraText(res?.data);
         setIsLoading(false);
       }
-      if (text) fetchdata(text);
+      fetchdata(debouncedText);
     }
-  }, [text]);
+  }, [debouncedText]);
 
   function handleSave() {
-    setContent(data);
+    setMitraText(data);
     setIsContentChanged(false);
   }
   function handleChange(e) {
@@ -53,13 +53,16 @@ function MitraTextView({ text, language, setContent }: TextViewProps) {
           {isContentChanged ? <SaveButton /> : <SaveButtonWithTick />}
         </button>
       </div>
-      {isLoading && <Loading />}
-      <textarea
-        value={data || ""}
-        onChange={handleChange}
-        className="w-full bg-white border-none text-[20px] "
-        rows={6}
-      />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <textarea
+          value={data || ""}
+          onChange={handleChange}
+          className="w-full bg-white border-none text-[20px] "
+          rows={6}
+        />
+      )}
     </div>
   );
 }

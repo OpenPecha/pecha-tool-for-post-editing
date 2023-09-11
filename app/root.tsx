@@ -1,4 +1,4 @@
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -6,17 +6,27 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 import globalStyle from "~/style/global.css";
 import { RecoilRoot } from "recoil";
 import tailwindStyle from "~/style/tailwind.css";
+import { createUserIfNotExists } from "./model/user";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwindStyle },
   { rel: "stylesheet", href: globalStyle },
 ];
 
+export const loader: LoaderFunction = async ({ request }) => {
+  let url = new URL(request.url);
+  let session = url.searchParams.get("session") as string;
+  let user = await createUserIfNotExists(session);
+  return { user };
+};
+
 export default function App() {
+  const { user } = useLoaderData();
   return (
     <html lang="en">
       <head>
@@ -27,7 +37,7 @@ export default function App() {
       </head>
       <body>
         <RecoilRoot>
-          <Outlet />
+          <Outlet context={user} />
         </RecoilRoot>
         <ScrollRestoration />
         <Scripts />

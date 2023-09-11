@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Loading } from "~/component/Loading";
+import useDebounce from "~/lib/useDebounce";
 
 type BingType = {
   text: string;
@@ -9,12 +10,13 @@ type BingType = {
 function BingView({ text, name }: BingType) {
   const [isLoading, setIsloading] = useState(false);
   const [content, setContent] = useState("");
+  let debounced_text = useDebounce(text, 1000);
   useEffect(() => {
-    if (text) {
+    if (debounced_text) {
       setIsloading(true);
       const url = "/api/bingai";
       const formData = new FormData();
-      formData.append("text", text);
+      formData.append("text", debounced_text);
       formData.append("language", "en-bo");
       fetch(url, {
         method: "POST",
@@ -29,7 +31,7 @@ function BingView({ text, name }: BingType) {
           setIsloading(false);
         });
     }
-  }, [text]);
+  }, [debounced_text]);
 
   return (
     <div>

@@ -16,11 +16,9 @@ export const extensions = [StarterKit, Space(setter), Character(charClick)];
 function TiptapEditor({
   sourceText,
   setEdit,
-  setDictionary,
 }: {
   sourceText: string;
   setEdit: (value: boolean) => void;
-  setDictionary: (data: {}) => void;
 }) {
   let [content, setContent] = useState<string | null>(null);
   let [loading, setLoading] = useState<boolean>(false);
@@ -42,7 +40,7 @@ function TiptapEditor({
   return (
     <div className="border-2 border-gray-200 shadow-md text-lg">
       {dictionaryData.length > 0 ? (
-        <DictionaryView data={dictionaryData} setDictionary={setDictionary} />
+        <DictionaryView data={dictionaryData} />
       ) : (
         <EditorProvider
           slotBefore={<TiptapInner setDictionaryData={setDictionaryData} />}

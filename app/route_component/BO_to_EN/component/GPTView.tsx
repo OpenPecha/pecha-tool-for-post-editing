@@ -1,21 +1,20 @@
 import { useEffect, useState, useRef } from "react";
+import { useRecoilValue } from "recoil";
 import CopyButton from "~/component/CopyButton";
 import { Loading } from "~/component/Loading";
 import { cleanUpSymbols } from "~/lib/cleanupText";
+import { dictionaryState, mitraTextState } from "../state";
+import useDebounce from "~/lib/useDebounce";
 
-function GPTview({
-  text,
-  mitraText,
-  dictionary,
-}: {
-  text: string | null;
-  mitraText: string;
-  dictionary: any;
-}) {
+function GPTview() {
+  let data = useRecoilValue(mitraTextState);
+  let dictionary_data = useRecoilValue(dictionaryState);
+  let mitraText = useDebounce(data, 1000);
+  let dictionary = useDebounce(dictionary_data, 1000);
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
-    if (text?.length === 0) return setContent("");
     async function fetchdata() {
       setIsLoading(true);
       let prompt = `[paste the result here] ,Edit the following without adding information: ${mitraText} `;
@@ -37,8 +36,8 @@ function GPTview({
           setIsLoading(false);
         });
     }
-    if (text && mitraText) fetchdata();
-  }, [text, mitraText, dictionary]);
+    if (mitraText) fetchdata();
+  }, [mitraText, dictionary]);
 
   return (
     <div className="final-box">

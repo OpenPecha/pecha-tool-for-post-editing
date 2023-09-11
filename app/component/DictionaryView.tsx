@@ -1,13 +1,15 @@
+import { useSetRecoilState } from "recoil";
+import { dictionaryState } from "~/route_component/BO_to_EN/state";
+
 export type Dictionary = {
   word: string;
   definition: string;
 };
 export type DictionaryViewType = {
   data: Dictionary[];
-  setDictionary: (data: {}) => void;
 };
 
-function DictionaryView({ data, setDictionary }: DictionaryViewType) {
+function DictionaryView({ data }: DictionaryViewType) {
   return (
     <>
       <div className=" box-title bg-blue-200 flex justify-between px-2">
@@ -18,11 +20,7 @@ function DictionaryView({ data, setDictionary }: DictionaryViewType) {
           return (
             <div>
               {word}
-              <Definition
-                word={word}
-                definition={definition}
-                setDictionary={setDictionary}
-              />
+              <Definition word={word} definition={definition} />
             </div>
           );
         })}
@@ -33,15 +31,13 @@ function DictionaryView({ data, setDictionary }: DictionaryViewType) {
 
 function Definition({
   definition,
-  setDictionary,
   word,
 }: {
   word: string;
   definition: string;
-  setDictionary: (data: {}) => void;
 }) {
+  const setDictionary = useSetRecoilState(dictionaryState);
   function handleInput(e) {
-    console.log(e.target.innerText, "save to database");
     setDictionary((prev) => ({
       ...prev,
       [word]: e.target.innerText,

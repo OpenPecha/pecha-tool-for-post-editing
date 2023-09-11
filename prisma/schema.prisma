@@ -13,10 +13,12 @@ datasource db {
 model User{
   id String @default(uuid()) @unique @id
   username String @unique
-  accepted_en  BO_EN_Text[]   @relation("UserModifiedText")
+  nickname String?
+  role  Role @default(ANNOTATOR)
+  accepted_en  BO_EN_Text[]   @relation("UserTranslatedText")
   rejected_en BO_EN_Text[]   @relation("UserRejectedText")
   ignored_en  BO_EN_Text[]   @relation("UserIgnoredText")
-  accepted_bo  EN_BO_Text[]   @relation("UserModifiedText")
+  accepted_bo  EN_BO_Text[]   @relation("UserTranslatedText")
   rejected_bo EN_BO_Text[]   @relation("UserRejectedText")
   ignored_bo  EN_BO_Text[]   @relation("UserIgnoredText")
 }
@@ -24,10 +26,12 @@ model User{
 model BO_EN_Text{
   id Int @default(autoincrement()) @unique @id
   original_text String 
+  name String  
   status         Status?
-  modified_text String?
-  modified_by    User?    @relation("UserModifiedText", fields: [modified_by_id], references: [id])
-  modified_by_id String?
+  translated String?
+  translated_by    User?    @relation("UserTranslatedText", fields: [translated_by_id], references: [id])
+  translated_by_id String?
+  duration       String?
   rejected_by    User[]   @relation("UserRejectedText")
   ignored_by     User[]   @relation("UserIgnoredText")
 }
@@ -35,11 +39,13 @@ model BO_EN_Text{
 
 model EN_BO_Text{
   id Int @default(autoincrement()) @unique @id
+  name String 
   original_text String 
   status         Status?
-  modified_text String?
-  modified_by    User?    @relation("UserModifiedText", fields: [modified_by_id], references: [id])
-  modified_by_id String?
+  translated String?
+  translated_by    User?    @relation("UserTranslatedText", fields: [translated_by_id], references: [id])
+  translated_by_id String?
+  duration        String?
   rejected_by    User[]   @relation("UserRejectedText")
   ignored_by     User[]   @relation("UserIgnoredText")
 }
@@ -48,4 +54,11 @@ enum Status {
   PENDING
   APPROVED
   REJECTED
+}
+
+enum Role {
+  ADMIN
+  USER
+  REVIEWER
+  ANNOTATOR
 }

@@ -1,14 +1,13 @@
 import { useState } from "react";
+import { useRecoilState } from "recoil";
 import TextView from "~/component/TextView";
 import TiptapEditor from "~/component/TiptapEditor";
+import { mainTextState } from "../state";
 
-type SourceProps = {
-  text: string;
-  setMainText: (text: string) => void;
-  setDictionary: (text: {}) => void;
-};
+type SourceProps = {};
 
-function Source({ text, setMainText, setDictionary }: SourceProps) {
+function Source({}: SourceProps) {
+  let [text, setMainText] = useRecoilState(mainTextState);
   let [sourceText, setSourceText] = useState<string>("");
   let [edit, setEdit] = useState<boolean>(true);
   let handleMainTextChange = (value) => {
@@ -41,11 +40,7 @@ function Source({ text, setMainText, setDictionary }: SourceProps) {
           color="#93c5fd"
         ></TextView>
       ) : (
-        <TiptapEditor
-          sourceText={sourceText}
-          setEdit={setEdit}
-          setDictionary={setDictionary}
-        />
+        <TiptapEditor sourceText={sourceText} setEdit={setEdit} />
       )}
     </>
   );

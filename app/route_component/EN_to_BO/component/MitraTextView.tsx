@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { fetchDharmaMitraData, languageType } from "~/api";
 import { Loading } from "~/component/Loading";
 import { DharmaLogo, GptImage } from "~/component/layout/SVGS";
+import useDebounce from "~/lib/useDebounce";
 
 interface TextViewProps {
   text: string;
@@ -20,16 +21,18 @@ function MitraTextView({
 }: TextViewProps) {
   const [data, setData] = useState("");
   const [isLoading, setIsloading] = useState(false);
-
+  const debounced_text = useDebounce(text, 1000);
   useEffect(() => {
-    async function fetchdata() {
-      setIsloading(true);
-      let res = await fetchDharmaMitraData(text, language);
-      setData(res?.data);
-      setIsloading(false);
+    if (debounced_text) {
+      async function fetchdata() {
+        setIsloading(true);
+        let res = await fetchDharmaMitraData(debounced_text, language);
+        setData(res?.data);
+        setIsloading(false);
+      }
+      fetchdata();
     }
-    if (text) fetchdata();
-  }, [text]);
+  }, [debounced_text]);
   return (
     <div onClick={() => onBoxClick({ text: data, name })} className="h-full">
       <div
@@ -43,8 +46,7 @@ function MitraTextView({
         </div>
       </div>
       <div className="box-content h-[80%]">
-        {isLoading && <Loading />}
-        {data}
+        {isLoading ? <Loading /> : data}
       </div>
     </div>
   );

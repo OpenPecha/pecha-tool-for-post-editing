@@ -18,7 +18,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   let words: [] = data.words.filter(
     (word) => word.pos !== "ADP" && word.pos !== "NO_POS" && word.pos !== "PART"
   );
-  console.log(words);
 
   let dictionary = {};
   await Promise.all(
