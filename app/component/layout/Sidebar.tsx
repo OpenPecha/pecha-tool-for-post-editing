@@ -8,9 +8,9 @@ export type historyText = {
   reviewed: boolean;
 };
 
-function Sidebar({ user, title }: { user: any; title: string }) {
+function Sidebar({ title }: { title: string }) {
   let [openMenu, setOpenMenu] = useState(false);
-
+  let { user } = useLoaderData();
   function SidebarHeader() {
     return (
       <div className="flex bg-[#384451] px-2 py-3 items-center justify-between md:hidden ">
@@ -35,16 +35,16 @@ function Sidebar({ user, title }: { user: any; title: string }) {
           openMenu ? "block translate-x-0" : ""
         } min-h-[100vh] w-[260px] md:translate-x-0`}
       >
-        <div className="px-2 flex gap-2 flex-col border-b-2 border-b-[#384451] mb-3 pb-2 mt-2 ">
+        <div className=" flex gap-2 flex-col border-b-2 border-b-[#384451] mb-3  mt-2 ">
           <SidebarHeader />
-
-          <TextInfo>User : {user?.username}</TextInfo>
-          <TextInfo>Approved : {user?.text?.length}</TextInfo>
-          <TextInfo>Rejected :{user?.rejected_list?.length}</TextInfo>
-          <TextInfo>Ignored : {user?.ignored_list?.length}</TextInfo>
-          <TextInfo>
-            Reviewed : {user?.text.filter((r) => r.reviewed)?.length}
-          </TextInfo>
+          {(user.role === "ADMIN" || user.role === "REVIEWER") && (
+            <Link
+              to={`/admin?session=${user.username}`}
+              className="hover:opacity-80 hover:bg-gray-800 transition-all duration-75"
+            >
+              {user.role} Dashboard
+            </Link>
+          )}
         </div>
         <div className="flex-1">
           <div className="text-sm mb-2 font-bold">History</div>

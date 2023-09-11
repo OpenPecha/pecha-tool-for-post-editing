@@ -11,13 +11,16 @@ import { cleanUpSymbols } from "~/lib/cleanupText";
 import { useRecoilState } from "recoil";
 import { finalTextState, gptResultState, sourceTextState } from "./state";
 import PromptView from "./component/Prompt";
+import { getUser } from "~/model/user";
 export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   let url = new URL(request.url);
   let session = url.searchParams.get("session");
   if (!session) return redirect("/error");
+  let user = await getUser(session);
 
   let text = "my name is tashi , how are you";
   return {
+    user,
     text,
   };
 };
@@ -39,7 +42,7 @@ export default function EN_to_BO() {
   };
   return (
     <div className="flex overflow-hidden h-screen flex-col md:flex-row">
-      <Sidebar user={null} title="EN->BO" />
+      <Sidebar title="EN->BO" />
       <div className="mt-10 md:pt-1 md:mt-0 w-full h-[90dvh] absolute md:relative top-4 overflow-y-scroll">
         <div className="p-2">
           <div className="flex-1">

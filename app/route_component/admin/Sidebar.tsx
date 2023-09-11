@@ -53,7 +53,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
             </NavLink>
             <h3 className="mb-4 text-sm font-semibold text-gray-400">MENU</h3>
 
-            <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
+            <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 ">
               <li>
                 <NavLink
                   to={"/admin/user?session=" + user.username}
@@ -74,7 +74,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                           (pathname === "/admin/text" ||
                             pathname.includes("text")) &&
-                          "bg-graydark dark:bg-meta-4"
+                          "bg-gray-700 dark:bg-meta-4"
                         }`}
                         onClick={handleClick}
                       >
@@ -98,7 +98,6 @@ function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                           />
                         </svg>
                       </div>
-                      {/* <!-- Dropdown Menu Start --> */}
                       <div
                         className={`translate transform overflow-hidden ${
                           !open && "hidden"
@@ -108,10 +107,12 @@ function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                           <li>
                             <NavLink
                               to={"/admin/text/en_bo?session=" + user.username}
-                              className={({ isActive }) =>
-                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                (isActive && "!text-white")
-                              }
+                              className={({ isActive }) => {
+                                return (
+                                  "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
+                                  (isActive && "bg-gray-400")
+                                );
+                              }}
                             >
                               En_Bo
                             </NavLink>
@@ -121,7 +122,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                               to={"/admin/text/bo_en?session=" + user.username}
                               className={({ isActive }) =>
                                 "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                (isActive && "!text-white")
+                                (isActive && "bg-gray-400")
                               }
                             >
                               Bo_En

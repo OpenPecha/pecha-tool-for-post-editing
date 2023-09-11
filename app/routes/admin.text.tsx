@@ -22,11 +22,7 @@ export const meta: V2_MetaFunction = () => {
 
 function Index() {
   const user = useOutletContext();
-  return (
-    <div className="w-full h-[100dvh] ">
-      <Outlet />
-    </div>
-  );
+  return <Outlet />;
 }
 
 export default Index;
