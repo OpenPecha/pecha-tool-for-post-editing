@@ -29,6 +29,49 @@ export const createUserIfNotExists = async (username: string) => {
 };
 
 export const getUsers = async () => {
-  const users = await db.user.findMany();
+  const users = await db.user.findMany({
+    orderBy: {
+      id: "asc",
+    },
+  });
   return users;
+};
+
+export async function updateUserRole(id: string, role: Role) {
+  let item = await db.user.update({
+    where: { id },
+    data: { role },
+  });
+  return item;
+}
+export const updateUserAssign = async (id: string, allow: boolean) => {
+  try {
+    let user = await db.user.update({
+      where: {
+        id,
+      },
+      data: {
+        isActive: allow,
+      },
+    });
+    return user;
+  } catch (e) {
+    throw new Error(e);
+  }
+};
+
+export const updateUserNickname = async (id: string, name: string) => {
+  try {
+    let user = await db.user.update({
+      where: {
+        id,
+      },
+      data: {
+        nickname: name,
+      },
+    });
+    return user;
+  } catch (e) {
+    throw new Error(e);
+  }
 };

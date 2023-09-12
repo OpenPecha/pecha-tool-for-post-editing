@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLoaderData } from "@remix-run/react";
 import { User } from "@prisma/client";
 function UserList({ user, selectedUser, setSelectedUser }: any) {
@@ -14,6 +14,9 @@ function UserList({ user, selectedUser, setSelectedUser }: any) {
   let list = users.filter((annotator: User) =>
     annotator.username.includes(search)
   );
+  useEffect(() => {
+    setSelectedUser(users[0].username);
+  }, []);
   if (selectedReviewer !== "All") {
     list = list.filter(
       (user: User & { reviewer: User }) =>
@@ -22,9 +25,9 @@ function UserList({ user, selectedUser, setSelectedUser }: any) {
     );
   }
   return (
-    <div className="col-span-12 rounded-sm border border-stroke bg-white py-6 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
+    <div className="sticky top-0 col-span-12 rounded-sm border border-stroke bg-white pt-6 pb-2 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-4">
       <div className="flex justify-between px-2">
-        <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
+        <h4 className="mb-3 text-xl font-semibold text-black dark:text-white">
           Annotators
         </h4>
       </div>
@@ -74,21 +77,15 @@ function EachUser({ user, setSelectedUser, selectedUser }) {
   return (
     <div
       onClick={() => setSelectedUser(user.username)}
-      className={` cursor-pointer flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4 hover:rounded-sm transition duration-300 ease-in-out hover:bg-green-300 ${
+      className={` cursor-pointer flex items-center gap-5  hover:bg-gray-3 dark:hover:bg-meta-4 hover:rounded-sm transition duration-300 ease-in-out hover:bg-green-300 ${
         selectedUser === user.username && "bg-green-300"
       }`}
     >
       <div className="flex flex-1 items-center justify-between px-2">
         <div>
-          <h5 className="font-medium text-black dark:text-white">
+          <h5 className="font-medium text-black dark:text-white capitalize">
             {user.nickname}{" "}
           </h5>
-          <p>
-            <span className="text-sm text-black dark:text-white">
-              {user.username}
-            </span>
-            <span className="text-xs"> . 12 min</span>
-          </p>
         </div>
       </div>
     </div>

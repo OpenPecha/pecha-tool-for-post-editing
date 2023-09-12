@@ -21,13 +21,19 @@ model User{
   accepted_bo  EN_BO_Text[]   @relation("UserTranslatedText")
   rejected_bo EN_BO_Text[]   @relation("UserRejectedText")
   ignored_bo  EN_BO_Text[]   @relation("UserIgnoredText")
+  assigned_en BO_EN_Text[]   @relation("UserAssignedBO_EN")
+  assigned_bo EN_BO_Text[]   @relation("UserAssignedEN_BO")
+
+  isActive Boolean @default(false)
 }
 
 model BO_EN_Text{
   id Int @default(autoincrement()) @unique @id
+  transcriber User? @relation("UserAssignedBO_EN",fields: [transcriber_id], references: [id])
+  transcriber_id String?
   original_text String 
   name String  
-  status         Status?
+  status Status?
   translated String?
   translated_by    User?    @relation("UserTranslatedText", fields: [translated_by_id], references: [id])
   translated_by_id String?
@@ -39,6 +45,8 @@ model BO_EN_Text{
 
 model EN_BO_Text{
   id Int @default(autoincrement()) @unique @id
+  transcriber User? @relation("UserAssignedEN_BO",fields: [transcriber_id], references: [id])
+  transcriber_id String?
   name String 
   original_text String 
   status         Status?

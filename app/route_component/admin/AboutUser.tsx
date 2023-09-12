@@ -1,5 +1,8 @@
 import { Link, useLoaderData } from "@remix-run/react";
 import { User } from "@prisma/client";
+import AllowAnnotation from "./AllowAnnotation";
+import AssignNickName from "./AssignNickName";
+import AssignRole from "./AssignRole";
 
 function Info({ children }: { children: React.ReactNode }) {
   return (
@@ -10,7 +13,7 @@ function Info({ children }: { children: React.ReactNode }) {
 }
 function Title({ children }: { children: React.ReactNode }) {
   return (
-    <div className="text-lg font-bold flex justify-between w-full">
+    <div className="text-sm font-light  flex justify-between w-full">
       {children}
     </div>
   );
@@ -25,26 +28,24 @@ const AboutUser = ({
 }) => {
   const { users } = useLoaderData();
   const annotator = users.find((user: User) => user?.username === selectedUser);
-
+  const isAdmin = user.role === "ADMIN";
   let url = `/admin/user/review/${selectedUser}?session=` + user.username;
   if (selectedUser === "") return null;
   return (
     <div className="sticky top-[80px]  rounded-sm border border-stroke bg-white px-5 pt-6 pb-10 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-10 ">
       <div className="flex flex-col md:flex-row justify-between px-1">
-        <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
+        <h4 className="mb-6 text-lg font-semibold text-black dark:text-white capitalize">
           {annotator?.username}
         </h4>
+        <AllowAnnotation annotator={annotator} />
       </div>
       <Info>
         <Title>Name:</Title>
+        <AssignNickName user={annotator} />
       </Info>
       <Info>
         <Title>Role</Title>
-        {annotator?.role}
-      </Info>
-
-      <Info>
-        <Title>Reviewer:</Title>
+        <AssignRole annotator={annotator} isAdmin={isAdmin} />
       </Info>
 
       <Link

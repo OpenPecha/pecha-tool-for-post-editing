@@ -18,7 +18,7 @@ function DictionaryView({ data }: DictionaryViewType) {
       <div className="px-2 flex flex-wrap">
         {data.map(({ word, definition }, index) => {
           return (
-            <div>
+            <div key={word + index}>
               {word}
               <Definition word={word} definition={definition} />
             </div>
