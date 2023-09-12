@@ -12,9 +12,7 @@ export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   let session = url.searchParams.get("session") as string;
   if (!session) return redirect("/error");
   let user = await getUser(session);
-  let text = await getTextForUser(user.id);
   return {
-    text,
     user,
   };
 };

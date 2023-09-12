@@ -7,7 +7,7 @@ import {
   useNavigation,
   useNavigate,
 } from "@remix-run/react";
-import { Suspense, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 export const loader: LoaderFunction = async ({ request, params }) => {
   let department = params.department as DepartmentType;
   let text = await getText(department, parseInt(params?.id!));
