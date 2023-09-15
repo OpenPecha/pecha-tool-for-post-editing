@@ -6,6 +6,7 @@ export const fetchDharmaMitraData = async (
   sentence: string,
   language: languageType
 ) => {
+  console.log(sentence, language);
   const apiUrl = "https://dharmamitra.org/api/translation/";
   const requestData = {
     input_sentence: sentence,
@@ -23,9 +24,10 @@ export const fetchDharmaMitraData = async (
       body: JSON.stringify(requestData),
     });
     let res = await response.text();
-    return convertToJSON(res);
+    let data = convertToJSON(res);
+    return data;
   } catch (e) {
-    throw new Error(e + "dharma metra error");
+    throw new Error(e + "Error in DharmaMitra API");
   }
 };
 

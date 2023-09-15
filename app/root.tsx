@@ -21,7 +21,7 @@ export const links: LinksFunction = () => [
 export const loader: LoaderFunction = async ({ request }) => {
   let url = new URL(request.url);
   let session = url.searchParams.get("session") as string;
-  let user = await createUserIfNotExists(session);
+  let user = session ? await createUserIfNotExists(session) : null;
   return { user };
 };
 

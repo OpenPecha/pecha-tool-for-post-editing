@@ -1,20 +1,29 @@
-import { LoaderArgs, LoaderFunction, redirect } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { useState } from "react";
-import Dictionary from "~/route_component/BO_to_EN/component/Dictionary";
+import { LoaderArgs, LoaderFunction, defer, redirect } from "@remix-run/node";
+import { Await } from "@remix-run/react";
 import GPTview from "~/route_component/BO_to_EN/component/GPTView";
 import MitraView from "~/route_component/BO_to_EN/component/MitraTextView";
 import Sidebar from "~/component/layout/Sidebar";
 import Source from "./component/Source";
 import { getUser } from "~/model/user";
+import { getTextForUser } from "~/model/text";
+import { DepartmentType } from "~/model/data/actions";
 export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   let url = new URL(request.url);
   let session = url.searchParams.get("session") as string;
+  let history = url.searchParams.get("history") || null;
   if (!session) return redirect("/error");
   let user = await getUser(session);
-  return {
+  let department: DepartmentType = "bo_en";
+  if (!user) return redirect("/error");
+  let text = await getTextForUser(user.id, department, history);
+  console.log(text);
+  // if (!text) return redirect("/error");
+  return defer({
     user,
-  };
+    department,
+    text,
+    history,
+  });
 };
 
 export default function BO_to_EN() {

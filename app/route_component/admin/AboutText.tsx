@@ -4,6 +4,11 @@ import AssignTranscriber from "./AssignTranscriber";
 function AboutText({ text, name }: any) {
   let location = useLocation();
   let searchParams = new URLSearchParams(location.search);
+  let color = {
+    APPROVED: "bg-green-400",
+    PENDING: "bg-yellow-400",
+    REJECTED: "bg-red-400",
+  };
   return (
     <>
       <AssignTranscriber transcriber={text?.at(0).transcriber} name={name} />
@@ -13,7 +18,11 @@ function AboutText({ text, name }: any) {
           let url = item.id + "?session=" + searchParams.get("session");
           return (
             <Link to={url} key={item.id + index}>
-              <span className="bg-gray-300 hover:bg-gray-400 rounded cursor-pointer">
+              <span
+                className={`bg-gray-300 hover:bg-gray-400 rounded cursor-pointer ${
+                  color[item.status]
+                }`}
+              >
                 {item.id}
               </span>
             </Link>

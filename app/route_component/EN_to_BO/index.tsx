@@ -1,5 +1,5 @@
-import { LoaderArgs, LoaderFunction, redirect } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { LoaderArgs, LoaderFunction, defer, redirect } from "@remix-run/node";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import TextView from "~/component/TextView";
 import GPTView from "./component/GPTView";
 import BingView from "./component/BingView";
@@ -12,25 +12,38 @@ import { useRecoilState } from "recoil";
 import { finalTextState, gptResultState, sourceTextState } from "./state";
 import PromptView from "./component/Prompt";
 import { getUser } from "~/model/user";
+import { DepartmentType } from "~/model/data/actions";
+import { getTextForUser } from "~/model/text";
 export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   let url = new URL(request.url);
   let session = url.searchParams.get("session");
-  if (!session) return redirect("/error");
+  let history = url.searchParams.get("history") || null;
+  if (!session) return redirect("/");
   let user = await getUser(session);
-
-  let text = "my name is tashi , how are you";
-  return {
+  if (!user) return redirect("/");
+  let department: DepartmentType = "en_bo";
+  let text = await getTextForUser(user.id, department, history);
+  return defer({
     user,
+    department,
     text,
-  };
+    history,
+  });
 };
 
 export default function EN_to_BO() {
+  let { text } = useLoaderData();
   const [sourceText, setSourceText] = useRecoilState(sourceTextState);
   const [gptResult] = useRecoilState(gptResultState);
   const [finalText, setFinalText] = useRecoilState(finalTextState);
   const [selectedOption, setSelectedOption] = useState("");
 
+  useEffect(() => {
+    if (text) {
+      setSourceText(text.original_text);
+      setFinalText("");
+    }
+  }, [text]);
   const onBoxClick = ({ name, text }: { name: string; text: string }) => {
     setSelectedOption(name);
     setFinalText(text);
@@ -98,6 +111,8 @@ export default function EN_to_BO() {
 
 function EditorView({ text }: { text: string }) {
   const [value, setValue] = useState(text);
+  const { text: loader_text, department, user } = useLoaderData();
+
   const handleInput = (e) => {
     const newText = e.target.value;
     setValue(newText);
@@ -105,6 +120,25 @@ function EditorView({ text }: { text: string }) {
   useEffect(() => {
     setValue(text);
   }, [text]);
+  const submitResult = useFetcher();
+
+  function handleSubmit() {
+    submitResult.submit(
+      {
+        id: loader_text.id,
+        user_id: user.id,
+        result: cleanUpSymbols(text),
+        department,
+        action: "save_text",
+      },
+      {
+        method: "PATCH",
+        action: "/api/text",
+      }
+    );
+  }
+  const disabled = submitResult.state !== "idle" || text.length < 5;
+
   return (
     <div className="final-box">
       <div
@@ -115,7 +149,13 @@ function EditorView({ text }: { text: string }) {
         }}
       >
         <div className="box-title p-1">Final:</div>
-        <CopyButton textToCopy={cleanUpSymbols(value)} />
+        <button
+          onClick={handleSubmit}
+          disabled={disabled}
+          className="btn-sm bg-green-400 disabled:bg-gray-400"
+        >
+          submit
+        </button>
       </div>
       <textarea value={value} onChange={handleInput} rows={4} />
     </div>

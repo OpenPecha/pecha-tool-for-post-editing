@@ -14,12 +14,12 @@ export default function Index() {
   const username = user?.username;
   return (
     <div className="w-full h-[100dvh] flex justify-center gap-3 items-center">
-      <Link to={"/bo2en?session=" + username} className={className}>
+      <Link to={"/bo_en?session=" + username} className={className}>
         བོད་ཡིག་
         <div>to</div>
         English
       </Link>
-      <Link to={"/en2bo?session=" + username} className={className}>
+      <Link to={"/en_bo?session=" + username} className={className}>
         ENGLISH
         <div>to</div>
         བོད་ཡིག་

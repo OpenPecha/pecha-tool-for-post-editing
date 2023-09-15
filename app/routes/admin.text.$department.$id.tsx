@@ -31,8 +31,8 @@ export default function AboutOneText() {
         {navigation.state !== "idle" && <div>loading</div>}
 
         <h3 className="text-gray-500">source:</h3>
-        <p className=" text-sm">{text.original_text}</p>
-        <h3 className="text-gray-500">translated</h3>
+        <p className=" text-sm ">{text.original_text}</p>
+        <h3 className="text-gray-500">translated:</h3>
         <p className=" text-sm">{text.translated}</p>
       </div>
 

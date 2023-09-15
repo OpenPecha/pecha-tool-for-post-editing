@@ -2,7 +2,12 @@ import { db } from "~/services/db.server";
 import { DepartmentType } from "./data/actions";
 import { getUser } from "./user";
 
-const databases: Record<string, any> = {
+type databasesArg = {
+  bo_en: typeof db.bO_EN_Text;
+  en_bo: typeof db.eN_BO_Text;
+};
+
+const databases: databasesArg = {
   bo_en: db.bO_EN_Text,
   en_bo: db.eN_BO_Text,
 };
@@ -16,7 +21,7 @@ export async function uploadDataIfNotExist({
   department: DepartmentType;
   data: string[];
 }) {
-  let database = databases[department];
+  let database = databases[department] as typeof db.bO_EN_Text;
   if (!database) return { error: "Invalid department" };
 
   const existingRecord = await database.findFirst({
@@ -38,7 +43,7 @@ export async function uploadDataIfNotExist({
 }
 
 export async function getData(department: DepartmentType) {
-  let database = databases[department];
+  let database = databases[department] as typeof db.eN_BO_Text;
   try {
     return await database?.findMany({
       select: {
@@ -57,7 +62,7 @@ export async function getData(department: DepartmentType) {
 }
 
 export async function getText(department: DepartmentType, id: number) {
-  let database = databases[department];
+  let database = databases[department] as typeof db.eN_BO_Text;
   try {
     let data = await database?.findUnique({
       where: { id: id },
@@ -72,7 +77,7 @@ export async function deleteTextWithName(
   text_name: string,
   department: DepartmentType
 ) {
-  let database = databases[department];
+  let database = databases[department] as typeof db.eN_BO_Text;
 
   try {
     return await database.deleteMany({
@@ -85,8 +90,12 @@ export async function deleteTextWithName(
   }
 }
 
-export async function updateTranscriber(text_name, transcriber, department) {
-  let database = databases[department];
+export async function updateTranscriber(
+  text_name,
+  transcriber,
+  department: DepartmentType
+) {
+  let database = databases[department] as typeof db.eN_BO_Text;
   let user = await getUser(transcriber);
   try {
     return await database.updateMany({
@@ -97,6 +106,62 @@ export async function updateTranscriber(text_name, transcriber, department) {
         transcriber_id: transcriber !== "" ? user?.id : null,
       },
     });
+  } catch (e) {
+    throw new Error("Error in updating data" + e);
+  }
+}
+
+export async function getTextForUser(
+  id: string,
+  department: DepartmentType,
+  history: string | null
+) {
+  if (history) {
+    let database = databases[department] as typeof db.eN_BO_Text;
+    const text = await database.findUnique({
+      where: { id: parseInt(history) },
+    });
+    let show = text?.modified_text
+      ? JSON.parse(text?.modified_text).join(" ")
+      : text?.original_text;
+    return {
+      ...text,
+      original_text: show,
+    };
+  }
+  try {
+    let database = databases[department] as typeof db.eN_BO_Text;
+    let text = await database.findFirst({
+      where: {
+        transcriber_id: id,
+        OR: [{ status: "PENDING" }, { status: "REJECTED" }, { status: null }],
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
+    return text;
+  } catch (e) {
+    throw new Error("Error in getting data" + e);
+  }
+}
+export async function updateText(
+  text_id: string,
+  user_id: string,
+  result: string,
+  department: DepartmentType
+) {
+  let database = databases[department] as typeof db.eN_BO_Text;
+  try {
+    let data = database.update({
+      where: { id: parseInt(text_id) },
+      data: {
+        status: "APPROVED",
+        translated: result,
+        translated_by_id: user_id,
+      },
+    });
+    return data;
   } catch (e) {
     throw new Error("Error in updating data" + e);
   }

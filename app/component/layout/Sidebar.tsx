@@ -10,7 +10,12 @@ export type historyText = {
 
 function Sidebar({ title }: { title: string }) {
   let [openMenu, setOpenMenu] = useState(false);
-  let { user } = useLoaderData();
+  let { user, department } = useLoaderData();
+
+  let rejectedlist =
+    department === "bo_en" ? user.rejected_en : user.rejected_bo;
+  let acceptedlist =
+    department === "en_bo" ? user.accepted_bo : user.accepted_en;
   function SidebarHeader() {
     return (
       <div className="flex bg-[#384451] px-2 py-3 items-center justify-between md:hidden ">
@@ -40,7 +45,7 @@ function Sidebar({ title }: { title: string }) {
           {(user.role === "ADMIN" || user.role === "REVIEWER") && (
             <Link
               to={`/admin?session=${user.username}`}
-              className="hover:opacity-80 hover:bg-gray-800 transition-all duration-75"
+              className="bg-gray-400 hover:opacity-80 hover:bg-gray-800 transition-all duration-75"
             >
               {user.role} Dashboard
             </Link>
@@ -48,9 +53,34 @@ function Sidebar({ title }: { title: string }) {
         </div>
         <div className="flex-1">
           <div className="text-sm mb-2 font-bold">History</div>
+          <div className="flex gap-3 flex-wrap mx-2">
+            <History list={rejectedlist} />
+            <History list={acceptedlist} />
+          </div>
         </div>
       </div>
     </div>
+  );
+}
+
+function History({ list }) {
+  let { user, department, history } = useLoaderData();
+  return (
+    <>
+      {list?.map((item) => {
+        return (
+          <Link
+            to={`/${department}?session=${user.username}&history=${item.id}`}
+            className={`px-2 flex gap-3 items-center ${
+              history == item.id ? "bg-gray-700" : ""
+            }`}
+            key={item.id + "history"}
+          >
+            {item.id}
+          </Link>
+        );
+      })}
+    </>
   );
 }
 
