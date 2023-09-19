@@ -1,6 +1,5 @@
-import { Link, useFetcher, useLoaderData } from "@remix-run/react";
+import { Link, useNavigate, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
-import TextInfo from "./TextInfo";
 import { Hamburger } from "./SVGS";
 
 export type historyText = {
@@ -44,7 +43,7 @@ function Sidebar({ title }: { title: string }) {
           <SidebarHeader />
           {(user.role === "ADMIN" || user.role === "REVIEWER") && (
             <Link
-              to={`/admin?session=${user.username}`}
+              to={`/admin/user?session=${user.username}`}
               className="bg-gray-400 hover:opacity-80 hover:bg-gray-800 transition-all duration-75"
             >
               {user.role} Dashboard
@@ -65,19 +64,26 @@ function Sidebar({ title }: { title: string }) {
 
 function History({ list }) {
   let { user, department, history } = useLoaderData();
+  let navigate = useNavigate();
+
+  function handleGoto(url: string) {
+    navigate(url);
+  }
   return (
     <>
       {list?.map((item) => {
+        let url = `/${department}?session=${user.username}&history=${item.id}`;
+
         return (
-          <Link
-            to={`/${department}?session=${user.username}&history=${item.id}`}
-            className={`px-2 flex gap-3 items-center ${
+          <span
+            onClick={() => handleGoto(url)}
+            className={`cursor-pointer  px-2 flex gap-3 items-center ${
               history == item.id ? "bg-gray-700" : ""
             }`}
             key={item.id + "history"}
           >
             {item.id}
-          </Link>
+          </span>
         );
       })}
     </>

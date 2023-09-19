@@ -89,7 +89,28 @@ export async function deleteTextWithName(
     throw new Error("Error in deleting data" + e);
   }
 }
+export async function getTextWithName(
+  department: DepartmentType,
+  filename: string
+) {
+  let database = databases[department] as typeof db.eN_BO_Text;
 
+  try {
+    return await database.findMany({
+      where: {
+        name: filename,
+      },
+      include: {
+        transcriber: true,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
+  } catch (e) {
+    throw new Error("Error in getting data" + e);
+  }
+}
 export async function updateTranscriber(
   text_name,
   transcriber,
@@ -140,6 +161,26 @@ export async function getTextForUser(
         id: "asc",
       },
     });
+    // if text not available find a text that has no transcriber and assign it to the user
+
+    if (!text) {
+      text = await database.findFirst({
+        where: {
+          transcriber_id: null,
+        },
+        orderBy: {
+          id: "asc",
+        },
+      });
+      if (text) {
+        await database.update({
+          where: { id: text.id },
+          data: {
+            transcriber_id: id,
+          },
+        });
+      }
+    }
     return text;
   } catch (e) {
     throw new Error("Error in getting data" + e);

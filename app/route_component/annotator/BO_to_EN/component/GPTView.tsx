@@ -5,6 +5,7 @@ import { cleanUpSymbols } from "~/lib/cleanupText";
 import { dictionaryState, mitraTextState } from "../state";
 import useDebounce from "~/lib/useDebounce";
 import { useLoaderData, useFetcher, useRevalidator } from "@remix-run/react";
+import CopyButton from "~/component/CopyButton";
 function GPTview() {
   let { text, user, department } = useLoaderData();
   let data = useRecoilValue(mitraTextState);
@@ -17,7 +18,7 @@ function GPTview() {
   const submitResult = useFetcher();
   useEffect(() => {
     setContent("");
-  }, []);
+  }, [text]);
   useEffect(() => {
     async function fetchdata() {
       setIsLoading(true);
@@ -53,23 +54,25 @@ function GPTview() {
       },
       {
         method: "PATCH",
-        action: "/api/text",
       }
     );
     setContent("");
   }
-  const disabled = submitResult.state !== "idle" || content.length < 5;
+  const disabled = submitResult.state !== "idle" || content.length < 5 || !text;
   return (
     <div className="final-box">
       <div className="flex items-center justify-between bg-yellow-100">
         <div className="box-title px-2">Final:</div>
-        <button
-          onClick={handleSubmit}
-          disabled={disabled}
-          className="btn-sm bg-green-400 disabled:bg-gray-400"
-        >
-          submit
-        </button>
+        <div className="flex">
+          <button
+            onClick={handleSubmit}
+            disabled={disabled}
+            className="btn-sm bg-green-400 disabled:bg-gray-400"
+          >
+            submit
+          </button>
+          <CopyButton textToCopy={cleanUpSymbols(content)} />
+        </div>
       </div>
       {isLoading && <Loading />}
       {!isLoading && (

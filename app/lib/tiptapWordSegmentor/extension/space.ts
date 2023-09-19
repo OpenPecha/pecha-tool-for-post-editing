@@ -1,6 +1,9 @@
 import { getMarkRange, Mark, mergeAttributes } from "@tiptap/core";
 import { Plugin, TextSelection } from "prosemirror-state";
-import { removeSpace, replaceSpacesWithHTMLTag } from "~/lib/utils";
+import {
+  removeSpace,
+  replaceSpacesWithHTMLTag,
+} from "~/lib/tiptapWordSegmentor/utils";
 import insertHTMLonText from "~/lib/insertHtmlOnText";
 export interface optionType {
   multicolor: boolean;

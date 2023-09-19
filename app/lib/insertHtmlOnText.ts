@@ -1,4 +1,4 @@
-import { replaceSpacesWithHTMLTag } from "./utils";
+import { replaceSpacesWithHTMLTag } from "~/lib/tiptapWordSegmentor/utils";
 
 function insertHTMLonText(text: string) {
   let split = splitText(text);

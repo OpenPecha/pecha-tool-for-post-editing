@@ -11,8 +11,8 @@ function Source({}: SourceProps) {
   let [, setMainText] = useRecoilState(mainTextState);
 
   useEffect(() => {
-    setMainText(text.original_text);
-    setSourceText(text.original_text);
+    setMainText(text?.original_text);
+    setSourceText(text?.original_text);
   }, [text]);
 
   let [sourceText, setSourceText] = useState<string>("");

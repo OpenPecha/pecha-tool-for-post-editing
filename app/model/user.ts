@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, Role } from "@prisma/client";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 import { db } from "~/services/db.server";
 
@@ -45,6 +45,18 @@ export const getUsers = async () => {
   const users = await db.user.findMany({
     orderBy: {
       id: "asc",
+    },
+    include: {
+      accepted_bo: {
+        select: { name: true, translated: true },
+        take: 10,
+        orderBy: { id: "desc" },
+      },
+      accepted_en: {
+        select: { name: true, translated: true },
+        take: 10,
+        orderBy: { id: "desc" },
+      },
     },
   });
   return users;

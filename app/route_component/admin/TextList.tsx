@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
 import { AiFillDelete } from "react-icons/ai";
-import { useFetcher } from "@remix-run/react";
-function TextList({
-  department,
-  groupedData,
-  handleSelection,
-  selectedText,
-}: any) {
+import {
+  Link,
+  useFetcher,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+} from "@remix-run/react";
+function TextList({ department, groupedData }: any) {
+  let { session } = useLoaderData();
   const deleteFetcher = useFetcher();
   const handleDelete = (key) => {
     deleteFetcher.submit(
@@ -18,26 +20,38 @@ function TextList({
       }
     );
   };
+  const url = `/admin/text/${department}/${
+    Object.keys(groupedData)[0]
+  }?session=${session}`;
+  const navigate = useNavigate();
   useEffect(() => {
-    handleSelection(Object.keys(groupedData)[0]);
+    navigate(url);
   }, [department]);
 
   return (
     <>
       {Object.keys(groupedData).map((key, index) => {
+        const value = groupedData[key];
+        let asignedUser = value[0]?.transcriber?.username || null;
+        let url = `/admin/text/${department}/${key}?session=${session}`;
         return (
-          <div
-            key={key + index}
-            className={`px-2
-             cursor-pointer w-full flex justify-between hover:bg-gray-200 dark:hover:bg-boxdark
-             ${selectedText === key ? "bg-gray-200 dark:bg-boxdark" : ""}
-             `}
-            onClick={() => handleSelection(key)}
-          >
-            {key}
+          <div className="flex justify-between items-center">
+            <Link
+              key={key + index}
+              className={`px-2
+            cursor-pointer w-full  hover:bg-gray-200 dark:hover:bg-boxdark
+            ${false ? "bg-gray-200 dark:bg-boxdark" : ""}
+            `}
+              to={url}
+            >
+              <div>
+                {key}
+                <div className="text-xs">{asignedUser}</div>
+              </div>
+            </Link>
             <button
               onClick={() => handleDelete(key)}
-              className="rounded-full hover:bg-gray-400"
+              className="rounded-full h-fit hover:bg-gray-400 p-1"
             >
               <AiFillDelete />
             </button>

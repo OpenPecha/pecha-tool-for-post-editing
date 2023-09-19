@@ -1,39 +1,26 @@
 import { useEffect, useState } from "react";
-import { SaveButton, SaveButtonWithTick } from "../../../component/SaveButton";
+import { SaveButton, SaveButtonWithTick } from "~/component/SaveButton";
 import _ from "lodash";
 import { DharmaLogo } from "~/component/layout/SVGS";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { mainTextState, mitraTextState } from "../state";
 import useDebounce from "~/lib/useDebounce";
-import { useFetcher } from "@remix-run/react";
+import useDharmaMitraTranslation from "~/component/hook/useDharmaMitraTranslation";
 function MitraTextView() {
   const sourceText = useRecoilValue(mainTextState);
   const [currentData, setData] = useRecoilState(mitraTextState);
   const [isContentChanged, setIsContentChanged] = useState(false);
   let debourcedText = useDebounce(sourceText, 1000);
-  let fetcher = useFetcher();
-  let data = fetcher.data;
-
+  let { data, isLoading, error } = useDharmaMitraTranslation(
+    debourcedText,
+    "bo-en"
+  );
   useEffect(() => {
-    if (debourcedText) {
-      fetcher.submit(
-        { sentence: debourcedText, language: "bo-en" },
-        {
-          method: "POST",
-          action: "/api/mitra",
-        }
-      );
-    }
-  }, [debourcedText]);
-
-  useEffect(() => {
-    if (data) {
-      setData(data.data);
-    }
+    if (data && data?.length > 0) setData(data);
   }, [data]);
+
   function handleSave() {
     setIsContentChanged(false);
-    console.log(data);
   }
   function handleChange(e) {
     setData(e.target.value);
@@ -50,7 +37,8 @@ function MitraTextView() {
           {isContentChanged ? <SaveButton /> : <SaveButtonWithTick />}
         </button>
       </div>
-      {fetcher.state !== "idle" ? (
+      {error && <div className="text-red-500">{error}</div>}
+      {isLoading ? (
         <div className="text-center">loading</div>
       ) : (
         <textarea

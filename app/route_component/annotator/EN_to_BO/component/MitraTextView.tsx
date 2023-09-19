@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { fetchDharmaMitraData, languageType } from "~/api";
 import { Loading } from "~/component/Loading";
+import useDharmaMitraTranslation from "~/component/hook/useDharmaMitraTranslation";
+import useDharmaMitraData from "~/component/hook/useDharmaMitraTranslation";
 import { DharmaLogo, GptImage } from "~/component/layout/SVGS";
 import useDebounce from "~/lib/useDebounce";
 
@@ -19,20 +21,12 @@ function MitraTextView({
   name,
   color,
 }: TextViewProps) {
-  const [data, setData] = useState("");
-  const [isLoading, setIsloading] = useState(false);
   const debounced_text = useDebounce(text, 1000);
-  useEffect(() => {
-    if (debounced_text) {
-      async function fetchdata() {
-        setIsloading(true);
-        let res = await fetchDharmaMitraData(debounced_text, language);
-        setData(res?.data);
-        setIsloading(false);
-      }
-      fetchdata();
-    }
-  }, [debounced_text]);
+  let { data, isLoading, error } = useDharmaMitraTranslation(
+    debounced_text,
+    "en-bo"
+  );
+
   return (
     <div onClick={() => onBoxClick({ text: data, name })} className="h-full">
       <div
@@ -45,9 +39,15 @@ function MitraTextView({
           {color === "#86efac" ? <GptImage /> : "source "}➜<DharmaLogo />
         </div>
       </div>
-      <div className="box-content h-[80%]">
-        {isLoading ? <Loading /> : data}
-      </div>
+      {error && <div className="text-red-500">{error}</div>}
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <div
+          className="box-content h-[80%]"
+          dangerouslySetInnerHTML={{ __html: data }}
+        ></div>
+      )}
     </div>
   );
 }
