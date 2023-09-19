@@ -4,6 +4,8 @@ import { FiEdit2 } from "react-icons/fi";
 import { TiTick } from "react-icons/ti";
 import { ImCross } from "react-icons/im";
 import { memo } from "react";
+import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
 function AssignNickName({ user }: { user: any }) {
   const fetcher = useFetcher();
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -18,7 +20,6 @@ function AssignNickName({ user }: { user: any }) {
         action: "change_nickname",
       },
       {
-        action: "/api/user",
         method: "POST",
       }
     );
@@ -30,33 +31,28 @@ function AssignNickName({ user }: { user: any }) {
       {!openEdit ? (
         <div className="flex gap-3">
           {fetcher?.formData?.get("nickname") || user.nickname}
-          <button onClick={() => setOpenEdit(true)}>
+          <button onClick={() => setOpenEdit(true)} title="edit">
             <FiEdit2 />
           </button>
         </div>
       ) : (
-        <div className="join ">
-          <input
+        <div className="flex w-full max-w-sm items-center space-x-2">
+          <Input
             type="text"
             defaultValue={user.nickname!}
             name="nickname"
             ref={inputRef}
-            className="input input-bordered join-item"
           />
-          <button
-            type="button"
-            className="btn join-item"
-            onClick={handleSubmit}
-          >
+          <Button type="button" variant="outline" onClick={handleSubmit}>
             <TiTick color="green" />
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
-            className="btn join-item"
+            variant="outline"
             onClick={() => setOpenEdit(false)}
           >
             <ImCross color="red" />
-          </button>
+          </Button>
         </div>
       )}
     </>

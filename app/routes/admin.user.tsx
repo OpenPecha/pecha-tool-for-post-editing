@@ -1,17 +1,20 @@
-import { User } from "@prisma/client";
 import {
   ActionFunction,
   LoaderFunction,
   V2_MetaFunction,
-  defer,
-  json,
   redirect,
 } from "@remix-run/node";
-import { useEffect, useState } from "react";
-import { Outlet, useOutletContext, useLoaderData } from "@remix-run/react";
-import { getUser, getUsers } from "~/model/user";
+import { useState } from "react";
+import { useOutletContext } from "@remix-run/react";
+import {
+  getUsers,
+  updateUserAssign,
+  updateUserNickname,
+  updateUserRole,
+} from "~/model/user";
 import UserList from "~/route_component/admin/UserList";
 import AboutUser from "~/route_component/admin/AboutUser";
+import { Role } from "@prisma/client";
 
 export const loader: LoaderFunction = async ({ request }) => {
   let url = new URL(request.url);
@@ -21,6 +24,28 @@ export const loader: LoaderFunction = async ({ request }) => {
   return {
     users,
   };
+};
+export const action: ActionFunction = async ({ request }) => {
+  let formdata = await request.formData();
+  let nickname = formdata.get("nickname") as string;
+  let id = formdata.get("id") as string;
+  let allow = formdata.get("allow") as string;
+  let action = formdata.get("action") as string;
+
+  switch (action) {
+    case "change_nickname": {
+      return await updateUserNickname(id, nickname);
+    }
+    case "change_allow_assign": {
+      return await updateUserAssign(id, allow === "true");
+    }
+    case "change_role": {
+      let role = formdata.get("role") as Role;
+      return await updateUserRole(id, role);
+    }
+  }
+
+  return null;
 };
 
 export const meta: V2_MetaFunction = () => {

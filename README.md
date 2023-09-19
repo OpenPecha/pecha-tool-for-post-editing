@@ -1,58 +1,81 @@
-# Welcome to Remix!
+# Tibetan-English Remix Translation App
 
-- [Remix Docs](https://remix.run/docs)
+Welcome to the Tibetan-English Post Editing Tool! This project is designed to provide an easy and efficient way to translate Tibetan text to English and vice versa using a combination of APIs from Dharma Mitra, ChatGPT, and Bing Translate. Whether you're a student, researcher, or simply curious about Tibetan culture and language, this app will help bridge the language gap and make translation a breeze.
 
-## Development
+## Table of Contents
 
-From your terminal:
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
 
-```sh
-npm run dev
+  - [Uploading a CSV File](#uploading-a-csv-file)
+
+- [File Format](#file-format)
+- [Contributing](#contributing)
+
+## Getting Started
+
+Before you can start using the Tibetan-English Remix Translation App, there are a few prerequisites and installation steps to follow.
+
+### Prerequisites
+
+- Node.js: Make sure you have Node.js installed on your system. You can download it from [nodejs.org](https://nodejs.org/).
+
+### Installation
+
+1. Clone this repository to your local machine:
+
+   ```bash
+   git clone https://github.com/OpenPecha/pecha-tool-for-post-editing.git
+   ```
+
+2. Change into the project directory:
+
+   ```bash
+   cd pecha-tool-for-post-editing
+   ```
+
+3. Install the required npm packages:
+
+   ```bash
+   npm install
+   ```
+
+4. Set up your API keys:
+
+   - Obtain an API key from Bing Translate and replace `<BING_TRANSLATE_API_KEY>` in the `.env` file with your actual API key.
+
+5. Start the application:
+
+   ```bash
+   npm start
+   ```
+
+Now, your Tool should be up and running!
+
+## Usage
+
+### Uploading a CSV File
+
+To get started with translation, you'll need to upload a CSV file . The CSV file should have a column named "paragraph" containing the text you want to translate. Here's an example of what the CSV file format should look like:
+
+```csv
+paragraph
+བཀྲ་ཤིས་བདེ་ལེགས
+དྲིན་ཆེན་རྩ་ཚིག
+རྒྱུ་རྐྱ་རིན་པོ
 ```
 
-This starts your app in development mode, rebuilding assets on file changes.
+## File Format
 
-## Deployment
+The CSV file format for input should adhere to the following structure:
 
-First, build your app for production:
+- Column Name: "paragraph"
+- Each row should contain the text you want to translate,
 
-```sh
-npm run build
-```
+Ensure that your CSV file follows this format for a smooth translation experience.
 
-Then run the app in production mode:
+## Contributing
 
-```sh
-npm start
-```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `remix build`
-
-- `build/`
-- `public/build/`
-
-### Using a Template
-
-When you ran `npx create-remix@latest` there were a few choices for hosting. You can run that again to create a new project, then copy over relevant code/assets from your current app to the new project that's pre-configured for your target server.
-
-Most importantly, this means everything in the `app/` directory, but if you've further customized your current application outside of there it may also include:
-
-- Any assets you've added/updated in `public/`
-- Any updated versions of root files such as `.eslintrc.js`, etc.
-
-```sh
-cd ..
-# create a new project, and pick a pre-configured host
-npx create-remix@latest
-cd my-new-remix-app
-# remove the new project's app (not the old one!)
-rm -rf app
-# copy your app over
-cp -R ../my-old-remix-app/app app
-```
+We welcome contributions from the community to improve this translation app. If you have any suggestions, bug reports, or want to add new features, please feel free to open an issue or submit a pull request on our GitHub repository.

@@ -1,5 +1,7 @@
 import type { V2_MetaFunction } from "@remix-run/node";
-import { Link, useOutletContext } from "@remix-run/react";
+import { Link, useOutletContext, useNavigate } from "@remix-run/react";
+import { Card, CardContent } from "~/components/ui/card";
+import { DepartmentType } from "~/model/data/actions";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -9,21 +11,34 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export default function Index() {
-  let className = "btn ";
   const user = useOutletContext();
   const username = user?.username;
+  const navigate = useNavigate();
+
+  const handleGoto = (department: DepartmentType) => {
+    let url = username
+      ? `/${department}?session=${username}`
+      : `/${department}`;
+    navigate(url);
+  };
   return (
     <div className="w-full h-[100dvh] flex justify-center gap-3 items-center">
-      <Link to={"/bo2en?session=" + username} className={className}>
-        བོད་ཡིག་
-        <div>to</div>
-        English
-      </Link>
-      <Link to={"/en2bo?session=" + username} className={className}>
-        ENGLISH
-        <div>to</div>
-        བོད་ཡིག་
-      </Link>
+      <Card
+        onClick={() => handleGoto("bo_en")}
+        className="cursor-pointer hover:bg-gray-200"
+      >
+        <CardContent className="mt-4">
+          བོད་ཡིག་ <div>-</div> English
+        </CardContent>
+      </Card>
+      <Card
+        onClick={() => handleGoto("en_bo")}
+        className="cursor-pointer hover:bg-gray-200"
+      >
+        <CardContent className="mt-4">
+          ENGLISH <div>-</div> བོད་ཡིག་
+        </CardContent>
+      </Card>
     </div>
   );
 }

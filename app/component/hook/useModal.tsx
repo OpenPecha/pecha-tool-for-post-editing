@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 
-function useModal() {
+function useModal(isAbsolute = true) {
   let [isOpen, setIsOpen] = useState(false);
   const openModal = () => {
     setIsOpen(true);
@@ -17,7 +17,7 @@ function useModal() {
       {isOpen && (
         <dialog
           open={isOpen}
-          className="modal z-20 absolute"
+          className={`modal z-20 ${isAbsolute && "absolute"} `}
           onClose={() => setIsOpen(false)}
         >
           <div className="modal-box w-11/12 max-w-5xl">

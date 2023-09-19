@@ -1,6 +1,5 @@
 import { LoaderFunction, V2_MetaFunction, redirect } from "@remix-run/node";
-import { useState } from "react";
-import { useOutletContext, Outlet } from "@remix-run/react";
+import { Outlet } from "@remix-run/react";
 
 export const loader: LoaderFunction = async ({ request }) => {
   let url = new URL(request.url);
@@ -21,7 +20,6 @@ export const meta: V2_MetaFunction = () => {
 };
 
 function Index() {
-  const user = useOutletContext();
   return <Outlet />;
 }
 

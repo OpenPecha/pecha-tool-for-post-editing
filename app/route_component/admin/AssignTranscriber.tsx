@@ -1,7 +1,13 @@
 import React from "react";
 import { AiFillDelete } from "react-icons/ai";
-import Select from "react-tailwindcss-select";
 import { useFetcher, useLoaderData } from "@remix-run/react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 function AssignTranscriber({ transcriber, name }: any) {
   let { users, department } = useLoaderData();
   let fetcher = useFetcher();
@@ -25,13 +31,12 @@ function AssignTranscriber({ transcriber, name }: any) {
       },
       {
         method: "PATCH",
-        action: "/api/text",
       }
     );
   }
 
   function handleChange(data: any) {
-    let transcriber = data.value;
+    let transcriber = data;
     fetcher.submit(
       {
         text_name: name,
@@ -41,23 +46,25 @@ function AssignTranscriber({ transcriber, name }: any) {
       },
       {
         method: "PATCH",
-        action: "/api/text",
       }
     );
   }
   return (
-    <div className="flex gap-2 w-[50%] mb-3 z-30">
-      <Select
-        isMultiple={false}
-        value={value}
-        primaryColor="green"
-        onChange={handleChange}
-        options={options}
-        isSearchable
-        placeholder="assign a translator"
-        searchInputPlaceholder="search a translator"
-        loading={fetcher.state !== "idle"}
-      />
+    <div className="flex gap-2 w-full md:w-[50%] mb-3 z-30">
+      <Select onValueChange={handleChange}>
+        <SelectTrigger className="w-full h-6">
+          <SelectValue placeholder={value?.value} />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((option) => {
+            return (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            );
+          })}
+        </SelectContent>
+      </Select>
       <div className="flex items-center cursor-pointer" onClick={handleDelete}>
         <AiFillDelete />
       </div>

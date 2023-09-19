@@ -1,5 +1,3 @@
-import React from "react";
-
 function SaveButton() {
   return <img src="/asset/save.png" alt="save-png" className="save-btn" />;
 }

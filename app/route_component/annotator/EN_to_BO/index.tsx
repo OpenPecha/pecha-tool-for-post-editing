@@ -1,5 +1,5 @@
-import { LoaderArgs, LoaderFunction, redirect } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { LoaderArgs, LoaderFunction, defer, redirect } from "@remix-run/node";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import TextView from "~/component/TextView";
 import GPTView from "./component/GPTView";
 import BingView from "./component/BingView";
@@ -12,25 +12,39 @@ import { useRecoilState } from "recoil";
 import { finalTextState, gptResultState, sourceTextState } from "./state";
 import PromptView from "./component/Prompt";
 import { getUser } from "~/model/user";
+import { DepartmentType } from "~/model/data/actions";
+import { getTextForUser } from "~/model/text";
 export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   let url = new URL(request.url);
   let session = url.searchParams.get("session");
-  if (!session) return redirect("/error");
+  let history = url.searchParams.get("history") || null;
+  if (!session) session = "demo";
   let user = await getUser(session);
-
-  let text = "my name is tashi , how are you";
-  return {
+  if (!user) return redirect("/");
+  let department: DepartmentType = "en_bo";
+  let text = null;
+  if (user.isActive && session !== "demo")
+    text = await getTextForUser(user.id, department, history);
+  return defer({
     user,
+    department,
     text,
-  };
+    history,
+  });
 };
-
 export default function EN_to_BO() {
+  let { text, user } = useLoaderData();
   const [sourceText, setSourceText] = useRecoilState(sourceTextState);
   const [gptResult] = useRecoilState(gptResultState);
   const [finalText, setFinalText] = useRecoilState(finalTextState);
   const [selectedOption, setSelectedOption] = useState("");
 
+  useEffect(() => {
+    if (text) {
+      setSourceText(text.original_text);
+      setFinalText("");
+    }
+  }, [text]);
   const onBoxClick = ({ name, text }: { name: string; text: string }) => {
     setSelectedOption(name);
     setFinalText(text);
@@ -40,12 +54,17 @@ export default function EN_to_BO() {
     setSourceText(value);
     setFinalText("");
   };
+
   return (
     <div className="flex overflow-hidden h-screen flex-col md:flex-row">
       <Sidebar title="EN->BO" />
       <div className="mt-10 md:pt-1 md:mt-0 w-full h-[90dvh] absolute md:relative top-4 overflow-y-scroll">
         <div className="p-2">
           <div className="flex-1">
+            {!user.isActive && (
+              <div className="mb-2">❗contact admin to get access on text</div>
+            )}
+            {!text && <div className="mb-2">❗text unavailable</div>}
             <TextView
               text={sourceText}
               setMainText={onChangeHandler}
@@ -98,6 +117,8 @@ export default function EN_to_BO() {
 
 function EditorView({ text }: { text: string }) {
   const [value, setValue] = useState(text);
+  const { text: loader_text, department, user } = useLoaderData();
+
   const handleInput = (e) => {
     const newText = e.target.value;
     setValue(newText);
@@ -105,6 +126,25 @@ function EditorView({ text }: { text: string }) {
   useEffect(() => {
     setValue(text);
   }, [text]);
+  const submitResult = useFetcher();
+
+  function handleSubmit() {
+    submitResult.submit(
+      {
+        id: loader_text.id,
+        user_id: user.id,
+        result: cleanUpSymbols(value),
+        department,
+        action: "save_text",
+      },
+      {
+        method: "PATCH",
+      }
+    );
+  }
+  const disabled =
+    submitResult.state !== "idle" || text.length < 5 || !loader_text;
+
   return (
     <div className="final-box">
       <div
@@ -115,7 +155,16 @@ function EditorView({ text }: { text: string }) {
         }}
       >
         <div className="box-title p-1">Final:</div>
-        <CopyButton textToCopy={cleanUpSymbols(value)} />
+        <div className="flex gap-2">
+          <button
+            onClick={handleSubmit}
+            disabled={disabled}
+            className="btn-sm bg-green-400 disabled:bg-gray-400"
+          >
+            submit
+          </button>
+          <CopyButton textToCopy={cleanUpSymbols(value)} />
+        </div>
       </div>
       <textarea value={value} onChange={handleInput} rows={4} />
     </div>

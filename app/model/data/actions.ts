@@ -1,3 +1,4 @@
+import { fetchDharmaMitraData, languageType } from "~/api";
 import { uploadDataIfNotExist } from "../text";
 
 export type DepartmentType = "bo_en" | "en_bo";

@@ -1,6 +1,6 @@
 import { useFetcher } from "@remix-run/react";
 import { User } from "@prisma/client";
-
+import { Switch } from "~/components/ui/switch";
 function AllowAnnotation({ annotator }: { annotator: User }) {
   const fetcher = useFetcher();
 
@@ -12,26 +12,17 @@ function AllowAnnotation({ annotator }: { annotator: User }) {
         action: "change_allow_assign",
       },
       {
-        action: "/api/user",
         method: "POST",
       }
     );
   }
 
   return (
-    <div>
-      <input
-        title="active/inactive"
-        type="checkbox"
-        className={`toggle toggle-success ${
-          fetcher.state !== "idle" &&
-          "cursor-not-allowed opacity-50 pointer-events-non"
-        }`}
-        checked={annotator?.isActive!}
-        onChange={handleChangeAllow}
-        aria-label="Toggle_role"
-      />
-    </div>
+    <Switch
+      title="active/inactive"
+      checked={annotator?.isActive!}
+      onCheckedChange={handleChangeAllow}
+    />
   );
 }
 

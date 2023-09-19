@@ -1,9 +1,22 @@
+import { Prisma, Role } from "@prisma/client";
+import { DefaultArgs } from "@prisma/client/runtime/library";
 import { db } from "~/services/db.server";
 
 export async function getUser(session: string) {
+  let condition: Prisma.User$accepted_boArgs<DefaultArgs> = {
+    select: { id: true, translated: true },
+    take: 20,
+    orderBy: { id: "desc" },
+  };
   try {
     return await db.user.findUnique({
       where: { username: session },
+      include: {
+        accepted_bo: condition,
+        accepted_en: condition,
+        rejected_bo: condition,
+        rejected_en: condition,
+      },
     });
   } catch (e) {
     throw new Error("Error in getting data" + e);
@@ -32,6 +45,18 @@ export const getUsers = async () => {
   const users = await db.user.findMany({
     orderBy: {
       id: "asc",
+    },
+    include: {
+      accepted_bo: {
+        select: { name: true, translated: true },
+        take: 10,
+        orderBy: { id: "desc" },
+      },
+      accepted_en: {
+        select: { name: true, translated: true },
+        take: 10,
+        orderBy: { id: "desc" },
+      },
     },
   });
   return users;

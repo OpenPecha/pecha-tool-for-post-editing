@@ -1,41 +1,25 @@
 import { useEffect, useState } from "react";
-import { fetchDharmaMitraData, languageType } from "~/api";
-import { SaveButton, SaveButtonWithTick } from "../../../component/SaveButton";
+import { SaveButton, SaveButtonWithTick } from "~/component/SaveButton";
 import _ from "lodash";
 import { DharmaLogo } from "~/component/layout/SVGS";
-import { Loading } from "~/component/Loading";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { mainTextState, mitraTextState } from "../state";
 import useDebounce from "~/lib/useDebounce";
-
-interface TextViewProps {}
-
-function MitraTextView({}: TextViewProps) {
-  const text = useRecoilValue(mainTextState);
-  const [data, setData] = useState("");
-  const setMitraText = useSetRecoilState(mitraTextState);
+import useDharmaMitraTranslation from "~/component/hook/useDharmaMitraTranslation";
+function MitraTextView() {
+  const sourceText = useRecoilValue(mainTextState);
+  const [currentData, setData] = useRecoilState(mitraTextState);
   const [isContentChanged, setIsContentChanged] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  let debouncedText = useDebounce(text, 1000);
-
+  let debourcedText = useDebounce(sourceText, 1000);
+  let { data, isLoading, error } = useDharmaMitraTranslation(
+    debourcedText,
+    "bo-en"
+  );
   useEffect(() => {
-    if (debouncedText) {
-      if (!debouncedText?.endsWith("།")) debouncedText = debouncedText + "།";
-      debouncedText = debouncedText + " ";
-
-      async function fetchdata(text: string) {
-        setIsLoading(true);
-        let res = await fetchDharmaMitraData(text, "bo-en");
-        setData(res?.data);
-        setMitraText(res?.data);
-        setIsLoading(false);
-      }
-      fetchdata(debouncedText);
-    }
-  }, [debouncedText]);
+    if (data && data?.length > 0) setData(data);
+  }, [data]);
 
   function handleSave() {
-    setMitraText(data);
     setIsContentChanged(false);
   }
   function handleChange(e) {
@@ -53,11 +37,12 @@ function MitraTextView({}: TextViewProps) {
           {isContentChanged ? <SaveButton /> : <SaveButtonWithTick />}
         </button>
       </div>
+      {error && <div className="text-red-500">{error}</div>}
       {isLoading ? (
-        <Loading />
+        <div className="text-center">loading</div>
       ) : (
         <textarea
-          value={data || ""}
+          value={currentData || ""}
           onChange={handleChange}
           className="w-full bg-white border-none text-[20px] "
           rows={6}

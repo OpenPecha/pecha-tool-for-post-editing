@@ -1,5 +1,5 @@
 import { useSetRecoilState } from "recoil";
-import { dictionaryState } from "~/route_component/BO_to_EN/state";
+import { dictionaryState } from "~/route_component/annotator/BO_to_EN/state";
 
 export type Dictionary = {
   word: string;
