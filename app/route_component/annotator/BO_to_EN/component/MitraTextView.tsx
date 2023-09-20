@@ -6,6 +6,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { mainTextState, mitraTextState } from "../state";
 import useDebounce from "~/lib/useDebounce";
 import useDharmaMitraTranslation from "~/component/hook/useDharmaMitraTranslation";
+import { Textarea } from "~/components/ui/textarea";
 function MitraTextView() {
   const sourceText = useRecoilValue(mainTextState);
   const [currentData, setData] = useRecoilState(mitraTextState);
@@ -41,12 +42,7 @@ function MitraTextView() {
       {isLoading ? (
         <div className="text-center">loading</div>
       ) : (
-        <textarea
-          value={currentData || ""}
-          onChange={handleChange}
-          className="w-full bg-white border-none text-[20px] "
-          rows={6}
-        />
+        <Textarea value={currentData || ""} onChange={handleChange} rows={6} />
       )}
     </div>
   );

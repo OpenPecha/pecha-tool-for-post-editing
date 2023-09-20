@@ -17,6 +17,7 @@ export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   if (!user) return redirect("/error");
   let text = null;
   if (user.isActive) text = await getTextForUser(user.id, department, history);
+  if (session === "demo") text = null;
   return defer({
     user,
     department,

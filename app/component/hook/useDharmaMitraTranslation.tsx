@@ -1,31 +1,28 @@
 import { useEffect, useState } from "react";
 import { fetchDharmaMitraData, languageType } from "~/api";
+import { useFetcher } from "@remix-run/react";
 import _ from "lodash";
 function useDharmaMitraTranslation(
   debouncedText: string,
   language: languageType
 ) {
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
+  const fetcher = useFetcher();
   useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
-      setError(null);
-
-      const res = await fetchDharmaMitraData(debouncedText, language);
-
-      setData(res?.data);
-      setError(res?.error);
-      setIsLoading(false);
-    }
-
-    if (debouncedText && language) {
-      fetchData();
-    }
+    if (debouncedText && language)
+      fetcher.submit(
+        {
+          sentence: debouncedText,
+          language: language,
+        },
+        {
+          action: "/api/mitra",
+          method: "POST",
+        }
+      );
   }, [debouncedText, language]);
-
+  const data = fetcher.data?.data;
+  const isLoading = fetcher.state !== "idle";
+  const error = fetcher.data?.error;
   return { data, isLoading, error };
 }
 
