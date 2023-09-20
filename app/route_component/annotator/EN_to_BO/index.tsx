@@ -60,39 +60,38 @@ export default function EN_to_BO() {
   return (
     <div className="flex overflow-hidden h-screen flex-col md:flex-row">
       <Sidebar title="English To Bodyig" />
-      <div className="mt-10 md:pt-1 md:mt-0 w-full h-[90dvh] absolute md:relative top-4 overflow-y-scroll">
-        <div className="p-2">
-          <div className="flex-1">
-            {!user.isActive && (
-              <div className="mb-2">❗contact admin to get access on text</div>
-            )}
-            {!text && <div className="mb-2">❗text unavailable</div>}
-            <TextView
-              text={sourceText}
-              setMainText={onChangeHandler}
-              color="#93c5fd"
-            />
-            <EditorView text={finalText} />
-            <div className="flex gap-2 mt-2">
-              <MitraTextView
-                text={sourceText}
-                onBoxClick={onBoxClick}
-                name="mitra1"
-                color="#93c5fd"
-                selectedOption={selectedOption}
-              />
-              <MitraTextView
-                text={gptResult}
-                onBoxClick={onBoxClick}
-                name="mitra2"
-                color="#86efac"
-                selectedOption={selectedOption}
-              />
-            </div>
-            <PromptView />
-            <GPTView text={sourceText} color={"#86efac"} />
-            <BingView text={sourceText} name="bing1" />
+      <div className="mt-10 top-4 md:top-0 md:pt-1 md:mt-0 w-full  absolute md:relative  overflow-y-auto px-2">
+        <div className="flex-1">
+          <div className="text-xs">
+            {!user.isActive && "❗contact admin to get access on text "}
+            {!text && "❗text unavailable"}
           </div>
+
+          <TextView
+            text={sourceText}
+            setMainText={onChangeHandler}
+            color="#93c5fd"
+          />
+          <EditorView text={finalText} />
+          <div className="flex gap-2 mt-2">
+            <MitraTextView
+              text={sourceText}
+              onBoxClick={onBoxClick}
+              name="mitra1"
+              color="#93c5fd"
+              selectedOption={selectedOption}
+            />
+            <MitraTextView
+              text={gptResult}
+              onBoxClick={onBoxClick}
+              name="mitra2"
+              color="#86efac"
+              selectedOption={selectedOption}
+            />
+          </div>
+          <PromptView />
+          <GPTView text={sourceText} color={"#86efac"} />
+          <BingView text={sourceText} name="bing1" />
         </div>
       </div>
     </div>

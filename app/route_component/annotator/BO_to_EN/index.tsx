@@ -35,10 +35,11 @@ export default function BO_to_EN() {
       <div className="mt-10 md:mt-2 h-[90vh] overflow-y-scroll w-full absolute md:relative top-4">
         <div className="flex justify-around flex-wrap gap-4 p-2">
           <div className="max-w-[600px] w-full">
-            {!user.isActive && (
-              <div className="mb-2">❗ contact admin to get access on text</div>
-            )}
-            {!text && <div className="mb-2">❗ text unavailable</div>}
+            <div className="text-xs">
+              {!user.isActive && "❗contact admin to get access on text "}
+              {!text && "❗text unavailable"}
+            </div>
+
             <Source />
             <GPTview />
             <MitraView />
