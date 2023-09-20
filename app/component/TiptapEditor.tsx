@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { tokenizer } from "~/lib/tokenizer";
 import insertHTMLonText from "~/lib/insertHtmlOnText";
 import DictionaryView, { Dictionary } from "./DictionaryView";
+import { Card } from "~/components/ui/card";
 const setter = () => {};
 const charClick = () => {};
 
@@ -38,7 +39,7 @@ function TiptapEditor({
   let text_content = insertHTMLonText(content);
 
   return (
-    <div className="border-2 border-gray-200 shadow-md text-lg">
+    <Card className="overflow-hidden">
       {dictionaryData.length > 0 ? (
         <DictionaryView data={dictionaryData} />
       ) : (
@@ -51,7 +52,7 @@ function TiptapEditor({
           {/* <BubbleMenu>This is the bubble menu</BubbleMenu> */}
         </EditorProvider>
       )}
-    </div>
+    </Card>
   );
 }
 

@@ -1,8 +1,5 @@
-import { useEffect, useState } from "react";
-import { fetchDharmaMitraData, languageType } from "~/api";
 import { Loading } from "~/component/Loading";
 import useDharmaMitraTranslation from "~/component/hook/useDharmaMitraTranslation";
-import useDharmaMitraData from "~/component/hook/useDharmaMitraTranslation";
 import { DharmaLogo, GptImage } from "~/component/layout/SVGS";
 import { Card, CardDescription } from "~/components/ui/card";
 import useDebounce from "~/lib/useDebounce";
@@ -31,7 +28,7 @@ function MitraTextView({
   return (
     <Card
       onClick={() => onBoxClick({ text: data, name })}
-      className={` overflow-hidden w-[50%] ${
+      className={` overflow-hidden w-[50%] cursor-pointer ${
         selectedOption === name ? "border-2 border-blue-500" : ""
       }}`}
     >

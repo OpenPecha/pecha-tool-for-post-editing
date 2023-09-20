@@ -12,6 +12,7 @@ import globalStyle from "~/style/global.css";
 import { RecoilRoot } from "recoil";
 import tailwindStyle from "~/style/tailwind.css";
 import { createUserIfNotExists } from "./model/user";
+import { Toaster } from "~/components/ui/toaster";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwindStyle },
@@ -39,6 +40,7 @@ export default function App() {
         <RecoilRoot>
           <Outlet context={user} />
         </RecoilRoot>
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

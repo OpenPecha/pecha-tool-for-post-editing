@@ -1,5 +1,6 @@
 import { useCurrentEditor } from "@tiptap/react";
 import React, { useEffect } from "react";
+import { CardDescription } from "~/components/ui/card";
 import insertHTMLonText from "~/lib/insertHtmlOnText";
 
 function TiptapInner({ setDictionaryData }: any) {
@@ -100,12 +101,12 @@ function TiptapInner({ setDictionaryData }: any) {
 
   return (
     <>
-      <div className="box-title flex justify-between text-sm p-1 bg-[#93c5fd] w-full">
-        <div className="text-sm">Source text</div>
+      <CardDescription className="box-title flex justify-between text-sm p-1 bg-[#93c5fd] w-full">
+        Source text
         <button className="text-sm" onClick={handleSave}>
           save
         </button>
-      </div>
+      </CardDescription>
     </>
   );
 }

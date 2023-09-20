@@ -4,8 +4,9 @@ import { Loading } from "~/component/Loading";
 import { cleanUpSymbols } from "~/lib/cleanupText";
 import { dictionaryState, mitraTextState } from "../state";
 import useDebounce from "~/lib/useDebounce";
-import { useLoaderData, useFetcher, useRevalidator } from "@remix-run/react";
+import { useLoaderData, useFetcher } from "@remix-run/react";
 import CopyButton from "~/component/CopyButton";
+import { Card, CardDescription } from "~/components/ui/card";
 function GPTview() {
   let { text, user, department } = useLoaderData();
   let data = useRecoilValue(mitraTextState);
@@ -60,8 +61,8 @@ function GPTview() {
   }
   const disabled = submitResult.state !== "idle" || content.length < 5 || !text;
   return (
-    <div className="final-box">
-      <div className="flex items-center justify-between bg-yellow-100">
+    <Card className="mt-2">
+      <CardDescription className="flex items-center justify-between bg-yellow-100 p-1">
         <div className="box-title px-2">Final:</div>
         <div className="flex">
           <button
@@ -73,14 +74,14 @@ function GPTview() {
           </button>
           <CopyButton textToCopy={cleanUpSymbols(content)} />
         </div>
-      </div>
+      </CardDescription>
       {isLoading && <Loading />}
       {!isLoading && (
         <div className="box-content" style={{ maxWidth: "95%" }}>
           {cleanUpSymbols(content) || "Enter something in Source"}
         </div>
       )}
-    </div>
+    </Card>
   );
 }
 

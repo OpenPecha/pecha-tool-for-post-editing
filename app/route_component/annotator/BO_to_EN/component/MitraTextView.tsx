@@ -7,6 +7,7 @@ import { mainTextState, mitraTextState } from "../state";
 import useDebounce from "~/lib/useDebounce";
 import useDharmaMitraTranslation from "~/component/hook/useDharmaMitraTranslation";
 import { Textarea } from "~/components/ui/textarea";
+import { Card, CardDescription } from "~/components/ui/card";
 function MitraTextView() {
   const sourceText = useRecoilValue(mainTextState);
   const [currentData, setData] = useRecoilState(mitraTextState);
@@ -28,8 +29,8 @@ function MitraTextView() {
     setIsContentChanged(true);
   }
   return (
-    <div className="overflow-hidden mt-2 border-2 border-gray-400 shadow-sm">
-      <div className="flex items-center justify-between bg-green-200">
+    <Card className="overflow-hidden mt-2 ">
+      <CardDescription className="flex items-center justify-between bg-green-200">
         <div className="box-title w-fit p-1 flex items-center gap-2">
           Source ➜
           <DharmaLogo />
@@ -37,14 +38,14 @@ function MitraTextView() {
         <button onClick={handleSave}>
           {isContentChanged ? <SaveButton /> : <SaveButtonWithTick />}
         </button>
-      </div>
+      </CardDescription>
       {error && <div className="text-red-500">{error}</div>}
       {isLoading ? (
         <div className="text-center">loading</div>
       ) : (
         <Textarea value={currentData || ""} onChange={handleChange} rows={6} />
       )}
-    </div>
+    </Card>
   );
 }
 

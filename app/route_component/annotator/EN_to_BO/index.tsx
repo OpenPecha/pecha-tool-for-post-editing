@@ -59,7 +59,7 @@ export default function EN_to_BO() {
 
   return (
     <div className="flex overflow-hidden h-screen flex-col md:flex-row">
-      <Sidebar title="EN->BO" />
+      <Sidebar title="English To Bodyig" />
       <div className="mt-10 md:pt-1 md:mt-0 w-full h-[90dvh] absolute md:relative top-4 overflow-y-scroll">
         <div className="p-2">
           <div className="flex-1">
