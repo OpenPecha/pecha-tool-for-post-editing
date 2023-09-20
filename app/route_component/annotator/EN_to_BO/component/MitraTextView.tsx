@@ -19,7 +19,6 @@ function MitraTextView({
   color,
   selectedOption,
 }: TextViewProps) {
-  console.log(name, selectedOption);
   const debounced_text = useDebounce(text, 1000);
   let { data, isLoading, error } = useDharmaMitraTranslation(
     debounced_text,
