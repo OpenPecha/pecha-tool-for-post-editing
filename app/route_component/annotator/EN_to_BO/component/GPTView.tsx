@@ -6,6 +6,7 @@ import { GptImage } from "~/component/layout/SVGS";
 import { cleanUpSymbols } from "~/lib/cleanupText";
 import useDebounce from "~/lib/useDebounce";
 import { gptResultState, promptState } from "../state";
+import { Card, CardDescription } from "~/components/ui/card";
 
 type GPTViewProps = {
   text: string;
@@ -52,20 +53,18 @@ function GPTView({ text, color }: GPTViewProps) {
     setRefresh(true);
   };
   return (
-    <div className="overflow-hidden mt-2 border-2 border-gray-400 shadow-sm">
-      <div
+    <Card className="overflow-hidden mt-2 ">
+      <CardDescription
         className="flex items-center justify-between p-1 "
         style={{
           background: color,
         }}
       >
-        <div className="box-title w-fit p-1">
-          <GptImage />
-        </div>
+        <GptImage />
         <button onClick={handleSave}>
           {refresh ? <SaveButton /> : <SaveButtonWithTick />}
         </button>
-      </div>
+      </CardDescription>
       {isLoading ? (
         <Loading />
       ) : (
@@ -78,7 +77,7 @@ function GPTView({ text, color }: GPTViewProps) {
           {temp}
         </div>
       )}
-    </div>
+    </Card>
   );
 }
 

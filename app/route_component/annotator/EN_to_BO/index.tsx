@@ -14,6 +14,8 @@ import PromptView from "./component/Prompt";
 import { getUser } from "~/model/user";
 import { DepartmentType } from "~/model/data/actions";
 import { getTextForUser } from "~/model/text";
+import { Card, CardDescription } from "~/components/ui/card";
+import { Textarea } from "~/components/ui/textarea";
 export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   let url = new URL(request.url);
   let session = url.searchParams.get("session");
@@ -37,7 +39,7 @@ export default function EN_to_BO() {
   const [sourceText, setSourceText] = useRecoilState(sourceTextState);
   const [gptResult] = useRecoilState(gptResultState);
   const [finalText, setFinalText] = useRecoilState(finalTextState);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
     if (text) {
@@ -71,43 +73,25 @@ export default function EN_to_BO() {
               color="#93c5fd"
             />
             <EditorView text={finalText} />
-            <div className="flex gap-2">
-              <div
-                className="overflow-hidden mt-2 border-2 border-gray-400 shadow-sm flex-1 box-item"
-                style={{
-                  background: selectedOption === "mitra1" ? "#eea" : "#eee",
-                }}
-              >
-                <MitraTextView
-                  text={sourceText}
-                  language="en-bo"
-                  onBoxClick={onBoxClick}
-                  name="mitra1"
-                  color="#93c5fd"
-                />
-              </div>
-              <div
-                className="overflow-hidden mt-2 border-2 border-gray-400 shadow-sm  box-item flex-1"
-                style={{
-                  background: selectedOption === "mitra2" ? "#eea" : "#eee",
-                }}
-              >
-                <MitraTextView
-                  text={gptResult}
-                  language="en-bo"
-                  onBoxClick={onBoxClick}
-                  name="mitra2"
-                  color="#86efac"
-                />
-              </div>
+            <div className="flex gap-2 mt-2">
+              <MitraTextView
+                text={sourceText}
+                onBoxClick={onBoxClick}
+                name="mitra1"
+                color="#93c5fd"
+                selectedOption={selectedOption}
+              />
+              <MitraTextView
+                text={gptResult}
+                onBoxClick={onBoxClick}
+                name="mitra2"
+                color="#86efac"
+                selectedOption={selectedOption}
+              />
             </div>
             <PromptView />
-            <div className="flex-1">
-              <GPTView text={sourceText} color={"#86efac"} />
-            </div>
-            <div className="overflow-hidden mt-2 border-2 border-gray-400 shadow-sm box-item">
-              <BingView text={sourceText} name="bing1" />
-            </div>
+            <GPTView text={sourceText} color={"#86efac"} />
+            <BingView text={sourceText} name="bing1" />
           </div>
         </div>
       </div>
@@ -146,15 +130,9 @@ function EditorView({ text }: { text: string }) {
     submitResult.state !== "idle" || text.length < 5 || !loader_text;
 
   return (
-    <div className="final-box">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          background: "#eea",
-        }}
-      >
-        <div className="box-title p-1">Final:</div>
+    <Card className="final-box overflow-hidden  ">
+      <CardDescription className="flex justify-between bg-yellow-400 px-3">
+        Final:
         <div className="flex gap-2">
           <button
             onClick={handleSubmit}
@@ -165,8 +143,9 @@ function EditorView({ text }: { text: string }) {
           </button>
           <CopyButton textToCopy={cleanUpSymbols(value)} />
         </div>
-      </div>
-      <textarea value={value} onChange={handleInput} rows={4} />
-    </div>
+      </CardDescription>
+
+      <Textarea value={value} onChange={handleInput} rows={4} />
+    </Card>
   );
 }

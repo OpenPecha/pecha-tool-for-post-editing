@@ -1,5 +1,7 @@
 import { useRef, useEffect } from "react";
 import debounce from "lodash/debounce";
+import { Card, CardDescription } from "~/components/ui/card";
+import { Textarea } from "~/components/ui/textarea";
 type TextViewType = {
   text: string;
   setMainText: (data: string) => void;
@@ -30,14 +32,11 @@ function TextView({ text, setMainText, color, children }: TextViewType) {
   ).current;
 
   return (
-    <div className="overflow-hidden  border-2 border-gray-400 shadow-sm">
-      <div
-        className="box-title"
-        style={{ padding: 5, backgroundColor: color, width: "100%" }}
-      >
+    <Card className="overflow-hidden ">
+      <CardDescription className="px-2" style={{ backgroundColor: color }}>
         Source text
-      </div>
-      <textarea
+      </CardDescription>
+      <Textarea
         className="bg-white overflow-hidden w-full border-none"
         style={{ resize: "vertical", fontSize: 18 }}
         placeholder="Enter/paste your text here"
@@ -48,7 +47,7 @@ function TextView({ text, setMainText, color, children }: TextViewType) {
         onInput={debouncedAdjustHeight}
       />
       {children}
-    </div>
+    </Card>
   );
 }
 
