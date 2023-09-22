@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Loading } from "~/component/Loading";
-import { SaveButton, SaveButtonWithTick } from "~/component/SaveButton";
+import { SaveButton } from "~/component/SaveButton";
 import { GptImage } from "~/component/layout/SVGS";
 import { cleanUpSymbols } from "~/lib/cleanupText";
 import useDebounce from "~/lib/useDebounce";
@@ -61,9 +61,7 @@ function GPTView({ text, color }: GPTViewProps) {
         }}
       >
         <GptImage />
-        <button onClick={handleSave}>
-          {refresh ? <SaveButton /> : <SaveButtonWithTick />}
-        </button>
+        <SaveButton handleClick={handleSave} condition={refresh} />
       </CardDescription>
       {isLoading ? (
         <Loading />

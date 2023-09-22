@@ -126,7 +126,7 @@ function EditorView({ text }: { text: string }) {
     );
   }
   const disabled =
-    submitResult.state !== "idle" || text.length < 5 || !loader_text;
+    submitResult.state !== "idle" || text?.length < 5 || !loader_text;
 
   return (
     <Card className="final-box overflow-hidden  ">

@@ -27,14 +27,13 @@ function MitraTextView({
   return (
     <Card
       onClick={() => onBoxClick({ text: data, name })}
-      className={` overflow-hidden w-[50%] cursor-pointer ${
-        selectedOption === name ? "border-2 border-blue-500" : ""
-      }}`}
+      className={` overflow-hidden w-[50%] cursor-pointer `}
     >
       <CardDescription
         className="flex items-center justify-between "
         style={{
           background: color,
+          outline: selectedOption === name ? "2px solid gray" : "",
         }}
       >
         <div className="box-title w-fit p-1 flex items-center gap-2">

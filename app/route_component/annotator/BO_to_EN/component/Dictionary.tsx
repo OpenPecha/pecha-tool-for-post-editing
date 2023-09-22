@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
-import { SaveButton, SaveButtonWithTick } from "~/component/SaveButton";
 import Select from "react-tailwindcss-select";
+import { SaveButton } from "~/component/SaveButton";
 type DictionaryProps = {
   setDictionary?: (data: string) => void;
   text: string;
@@ -62,9 +62,7 @@ function Dictionary({ setDictionary, text }: DictionaryProps) {
     <div className="dictionary-container flex-1 overflow-hidden mt-2 border-2 border-gray-400 shadow-sm">
       <div className="flex items-center justify-between p-1 w-full bg-green-300">
         <h2 className="box-title px-2">Dictionary</h2>
-        <button onClick={handleSave}>
-          {isContentChanged ? <SaveButton /> : <SaveButtonWithTick />}
-        </button>
+        <SaveButton handleClick={handleSave} condition={isContentChanged} />
       </div>
       <div className="p-1">
         <Select

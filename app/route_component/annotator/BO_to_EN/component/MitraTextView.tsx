@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { SaveButton, SaveButtonWithTick } from "~/component/SaveButton";
+import { SaveButton } from "~/component/SaveButton";
 import _ from "lodash";
 import { DharmaLogo } from "~/component/layout/SVGS";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -35,9 +35,7 @@ function MitraTextView() {
           Source ➜
           <DharmaLogo />
         </div>
-        <button onClick={handleSave}>
-          {isContentChanged ? <SaveButton /> : <SaveButtonWithTick />}
-        </button>
+        <SaveButton handleClick={handleSave} condition={isContentChanged} />
       </CardDescription>
       {error && <div className="text-red-500">{error}</div>}
       {isLoading ? (
