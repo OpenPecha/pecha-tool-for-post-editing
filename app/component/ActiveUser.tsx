@@ -1,9 +1,11 @@
+import { useLocation } from "@remix-run/react";
 import { useIdle } from "@uidotdev/usehooks";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-export default function ActiveUser({ state }) {
+export default function ActiveUser({ state }: { state: any }) {
   const [active, setActive] = useRecoilState(state);
   const idle = useIdle(5000);
+  const location = useLocation();
   let timer = null;
   useEffect(() => {
     if (!idle) {
@@ -13,6 +15,9 @@ export default function ActiveUser({ state }) {
     }
     return () => clearInterval(timer);
   }, [idle]);
+  useEffect(() => {
+    setActive(0);
+  }, [location.search]);
   return (
     <div>
       <span className={idle ? "idle" : ""} />

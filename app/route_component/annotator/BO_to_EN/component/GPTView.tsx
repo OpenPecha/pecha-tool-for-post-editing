@@ -29,9 +29,17 @@ function GPTview() {
     async function fetchdata() {
       setIsLoading(true);
       let prompt = `[paste the result here] ,Edit the following without adding information: ${mitraText} `;
+      // filter dictionary data for only non emply value
       if (!!dictionary) {
+        let dict = { ...dictionary };
+        for (const key in dict) {
+          if (dict[key] !== "") {
+            dict[key] = dict[key];
+          }
+        }
+        console.log(dict);
         prompt += `[please use this data for dictionary ${JSON.stringify(
-          dictionary
+          dict
         )} ]`;
       }
       let url = `/api/openai`;

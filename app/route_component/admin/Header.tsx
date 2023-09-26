@@ -1,22 +1,7 @@
 import { NavLink, useLoaderData, Link } from "@remix-run/react";
 
-import { Hamburger } from "~/component/layout/SVGS";
-
-import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarSeparator,
-  MenubarShortcut,
-  MenubarTrigger,
-} from "~/components/ui/menubar";
 import { cn } from "~/lib/utils";
-const Header = (props: {
-  sidebarOpen: string | boolean | undefined;
-  setSidebarOpen: (arg0: boolean) => void;
-  className?: string;
-}) => {
+const Header = (props: { className?: string }) => {
   const { user } = useLoaderData();
   let url = "/?session=" + user.username;
   return (

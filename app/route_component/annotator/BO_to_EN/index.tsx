@@ -7,7 +7,6 @@ import Source from "./component/Source";
 import { getUser } from "~/model/user";
 import { getTextForUser } from "~/model/text";
 import { DepartmentType } from "~/model/data/actions";
-import { useState } from "react";
 import ActiveUser from "~/component/ActiveUser";
 import { activeTime } from "./state";
 export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
@@ -17,7 +16,7 @@ export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   if (!session) session = "demo";
   let user = await getUser(session);
   let department: DepartmentType = "bo_en";
-  if (!user) return redirect("/error");
+  // if (!user) return redirect("/error");
   let text = null;
   if (user.isActive) text = await getTextForUser(user.id, department, history);
   if (session === "demo") text = null;

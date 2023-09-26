@@ -209,3 +209,17 @@ export async function updateText(
     throw new Error("Error in updating data" + e);
   }
 }
+
+export function rejectText(id: string, department: DepartmentType) {
+  try {
+    let database = databases[department] as typeof db.eN_BO_Text;
+    return database.update({
+      where: { id: parseInt(id) },
+      data: {
+        status: "REJECTED",
+      },
+    });
+  } catch (e) {
+    throw new Error("Error in updating data" + e);
+  }
+}

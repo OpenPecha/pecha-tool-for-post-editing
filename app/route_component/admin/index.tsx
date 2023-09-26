@@ -15,14 +15,13 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export function AdminPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { pathname } = useLocation();
   const { user } = useLoaderData();
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
       <div className="flex h-screen overflow-hidden">
         <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-          <Header setSidebarOpen={setSidebarOpen} sidebarOpen={sidebarOpen} />
+          <Header />
           <main>
             <div
               className={`mx-auto max-w-screen-2xl  ${
