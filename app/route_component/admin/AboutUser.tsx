@@ -1,4 +1,4 @@
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData, useFetcher } from "@remix-run/react";
 import { User } from "@prisma/client";
 import AllowAnnotation from "./AllowAnnotation";
 import AssignNickName from "./AssignNickName";
@@ -29,16 +29,20 @@ function Title({ children }: { children: React.ReactNode }) {
 const AboutUser = ({
   selectedUser,
   user,
+  removeUser,
 }: {
   selectedUser: string;
   user: any;
+  removeUser: () => void;
 }) => {
   const { users } = useLoaderData();
   const annotator = users.find((user: User) => user?.username === selectedUser);
   const isAdmin = user.role === "ADMIN";
   const en_bo_work = annotator?.accepted_bo?.at(0)?.name;
   const bo_en_work = annotator?.accepted_en?.at(0)?.name;
+
   if (selectedUser === "") return null;
+  if (annotator === undefined) return null;
   return (
     <div className="sticky top-[80px]  rounded-sm border border-stroke bg-white px-5 pt-6 pb-10 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-10 ">
       <Card>
@@ -68,6 +72,16 @@ const AboutUser = ({
             <div>bo-en :{annotator?.accepted_en?.at(0).name}</div>
           ) : null}
         </Info>
+        {isAdmin && (
+          <Info>
+            <div
+              onClick={removeUser}
+              className="underline text-red-500 cursor-pointer "
+            >
+              remove user
+            </div>
+          </Info>
+        )}
       </CardContent>
     </div>
   );

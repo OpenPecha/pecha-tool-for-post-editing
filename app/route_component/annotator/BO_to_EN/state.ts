@@ -1,17 +1,17 @@
 import { atom } from "recoil";
 
 export const dictionaryState = atom({
-  key: "dictionary", // unique ID (with respect to other atoms/selectors)
+  key: "dictionary-bo-en", // unique ID (with respect to other atoms/selectors)
   default: null, // default value (aka initial value)
 });
 
 export const mainTextState = atom({
-  key: "mainText",
+  key: "mainText-bo-en",
   default: null,
 });
 
 export const mitraTextState = atom({
-  key: "mitraText",
+  key: "mitraText-bo-en",
   default: null,
 });
 

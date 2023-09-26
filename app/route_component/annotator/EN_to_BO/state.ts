@@ -1,27 +1,27 @@
 import { atom } from "recoil";
 
 export const sourceTextState = atom({
-  key: "sourceText",
+  key: "sourceText-en-bo",
   default: "",
 });
 
 export const mitraTextState = atom({
-  key: "mitraText2",
+  key: "mitraText2-en-bo",
   default: null,
 });
 
 export const gptResultState = atom({
-  key: "gptResultState",
+  key: "gptResultState-en-bo",
   default: "",
 });
 
 export const finalTextState = atom({
-  key: "finalText",
+  key: "finalText-en-bo",
   default: "",
 });
 
 export const promptState = atom({
-  key: "prompt",
+  key: "prompt-en-bo",
   default: " in plain english",
 });
 

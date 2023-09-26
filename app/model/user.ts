@@ -100,3 +100,16 @@ export const updateUserNickname = async (id: string, name: string) => {
     throw new Error(e);
   }
 };
+
+export const removeUser = async (username: string) => {
+  try {
+    let user = await db.user.delete({
+      where: {
+        username,
+      },
+    });
+    return user;
+  } catch (e) {
+    throw new Error(e);
+  }
+};

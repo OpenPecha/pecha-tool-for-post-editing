@@ -23,7 +23,6 @@ function AssignRole({
     { value: "ANNOTATOR", label: "ANNOTATOR" },
     { value: "USER", label: "USER" },
   ];
-  let value = { value: annotator.role, label: annotator.role };
   function handleChange(data) {
     let role = data;
     if (!role) {
@@ -47,24 +46,14 @@ function AssignRole({
   }
 
   return (
-    // <Select
-    //   isMultiple={false}
-    //   value={value}
-    //   primaryColor="green"
-    //   onChange={handleChange}
-    //   options={options}
-    //   isSearchable
-    //   isDisabled={!isAdmin}
-    //   loading={fetcher.state !== "idle"}
-    // />
     <Select onValueChange={handleChange} disabled={!isAdmin}>
       <SelectTrigger className="w-[180px] h-6">
-        <SelectValue placeholder={annotator.role} />
+        <SelectValue placeholder={annotator?.role} />
       </SelectTrigger>
       <SelectContent>
         {options.map((option) => {
           return (
-            <SelectItem key={option.value} value={option.value}>
+            <SelectItem key={option?.value} value={option.value}>
               {option.label}
             </SelectItem>
           );

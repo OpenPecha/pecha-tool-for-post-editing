@@ -5,9 +5,10 @@ import {
   redirect,
 } from "@remix-run/node";
 import { useState } from "react";
-import { useOutletContext } from "@remix-run/react";
+import { useFetcher, useOutletContext } from "@remix-run/react";
 import {
   getUsers,
+  removeUser,
   updateUserAssign,
   updateUserNickname,
   updateUserRole,
@@ -43,6 +44,12 @@ export const action: ActionFunction = async ({ request }) => {
       let role = formdata.get("role") as Role;
       return await updateUserRole(id, role);
     }
+    case "remove_user": {
+      if (request.method === "DELETE") {
+        let username = formdata.get("username") as string;
+        return await removeUser(username);
+      }
+    }
   }
 
   return null;
@@ -61,10 +68,29 @@ export const meta: V2_MetaFunction = () => {
 function Index() {
   const [selectedUser, setSelectedUser] = useState<string>("");
   const user = useOutletContext();
+  let fetcher = useFetcher();
+
+  function removeUser() {
+    if (window.confirm("Are you sure you want to remove this user ?")) {
+      fetcher.submit(
+        {
+          username: selectedUser,
+          action: "remove_user",
+        },
+        {
+          method: "DELETE",
+        }
+      );
+    }
+  }
   return (
     <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5 ">
       <div className="col-span-12 xl:col-span-8 ">
-        <AboutUser selectedUser={selectedUser} user={user} />
+        <AboutUser
+          selectedUser={selectedUser}
+          user={user}
+          removeUser={removeUser}
+        />
       </div>
       <UserList
         user={user}
