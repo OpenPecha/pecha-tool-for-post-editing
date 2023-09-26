@@ -1,4 +1,6 @@
 {
+  "name": "pecha-tool-for-post-editor",
+  "author": "Tenzin Kunsang",
   "private": true,
   "sideEffects": false,
   "scripts": {
@@ -28,6 +30,7 @@
     "@tiptap/pm": "2.1.8",
     "@tiptap/react": "2.1.8",
     "@tiptap/starter-kit": "2.1.8",
+    "@uidotdev/usehooks": "^2.3.1",
     "axios": "1.5.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",

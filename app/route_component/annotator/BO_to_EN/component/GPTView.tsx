@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Loading } from "~/component/Loading";
 import { cleanUpSymbols } from "~/lib/cleanupText";
-import { dictionaryState, mitraTextState } from "../state";
+import {
+  activeTime,
+  dictionaryState,
+  mitraTextState,
+} from "~/route_component/annotator/BO_to_EN/state";
 import useDebounce from "~/lib/useDebounce";
 import { useLoaderData, useFetcher } from "@remix-run/react";
 import CopyButton from "~/component/CopyButton";
 import { Card, CardDescription } from "~/components/ui/card";
 function GPTview() {
   let { text, user, department } = useLoaderData();
+  let [duration, setDuration] = useRecoilState(activeTime);
   let data = useRecoilValue(mitraTextState);
   let dictionary_data = useRecoilValue(dictionaryState);
   let mitraText = useDebounce(data, 1000);
@@ -51,6 +56,7 @@ function GPTview() {
         user_id: user.id,
         result: cleanUpSymbols(content),
         department,
+        duration,
         action: "save_text",
       },
       {
@@ -58,6 +64,7 @@ function GPTview() {
       }
     );
     setContent("");
+    setDuration(0);
   }
   const disabled = submitResult.state !== "idle" || content.length < 5 || !text;
   return (

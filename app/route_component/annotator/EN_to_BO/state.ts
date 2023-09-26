@@ -24,3 +24,8 @@ export const promptState = atom({
   key: "prompt",
   default: " in plain english",
 });
+
+export const activeTime = atom({
+  key: "activeTime-en-bo",
+  default: 0,
+});

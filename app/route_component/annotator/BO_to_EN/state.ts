@@ -14,3 +14,8 @@ export const mitraTextState = atom({
   key: "mitraText",
   default: null,
 });
+
+export const activeTime = atom({
+  key: "activeTime-bo-en",
+  default: 0,
+});

@@ -190,7 +190,8 @@ export async function updateText(
   text_id: string,
   user_id: string,
   result: string,
-  department: DepartmentType
+  department: DepartmentType,
+  duration: string
 ) {
   let database = databases[department] as typeof db.eN_BO_Text;
   try {
@@ -200,6 +201,7 @@ export async function updateText(
         status: "APPROVED",
         translated: result,
         translated_by_id: user_id,
+        duration: duration,
       },
     });
     return data;

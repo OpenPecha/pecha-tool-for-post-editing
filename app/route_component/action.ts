@@ -10,17 +10,18 @@ const action: ActionFunction = async ({ request }) => {
   let url = new URL(headerUrl);
   let history = url.searchParams.get("history") as string;
   let session = url.searchParams.get("session") as string;
-
   if (request.method === "PATCH") {
     switch (action) {
       case "save_text": {
         let result = formData.get("result") as string;
         let user_id = formData.get("user_id") as string;
         let text_id = formData.get("id") as string;
+        let duration = formData.get("duration") as string;
+
         if (history) {
           return redirect(`/${department}/?session=${session}`);
         }
-        return await updateText(text_id, user_id, result, department);
+        return await updateText(text_id, user_id, result, department, duration);
       }
     }
   }

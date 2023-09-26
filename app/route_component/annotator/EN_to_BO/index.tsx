@@ -8,14 +8,20 @@ import { useEffect, useState } from "react";
 import Sidebar from "~/component/layout/Sidebar";
 import CopyButton from "~/component/CopyButton";
 import { cleanUpSymbols } from "~/lib/cleanupText";
-import { useRecoilState } from "recoil";
-import { finalTextState, gptResultState, sourceTextState } from "./state";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  activeTime,
+  finalTextState,
+  gptResultState,
+  sourceTextState,
+} from "./state";
 import PromptView from "./component/Prompt";
 import { getUser } from "~/model/user";
 import { DepartmentType } from "~/model/data/actions";
 import { getTextForUser } from "~/model/text";
 import { Card, CardDescription } from "~/components/ui/card";
 import { Textarea } from "~/components/ui/textarea";
+import ActiveUser from "~/component/ActiveUser";
 export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   let url = new URL(request.url);
   let session = url.searchParams.get("session");
@@ -66,6 +72,7 @@ export default function EN_to_BO() {
             {!user.isActive && "❗contact admin to get access on text "}
             {!text && "❗text unavailable"}
           </div>
+          <ActiveUser state={activeTime} />
 
           <TextView
             text={sourceText}
@@ -101,7 +108,7 @@ export default function EN_to_BO() {
 function EditorView({ text }: { text: string }) {
   const [value, setValue] = useState(text);
   const { text: loader_text, department, user } = useLoaderData();
-
+  const [duration, setDuration] = useRecoilState(activeTime);
   const handleInput = (e) => {
     const newText = e.target.value;
     setValue(newText);
@@ -117,6 +124,7 @@ function EditorView({ text }: { text: string }) {
         id: loader_text.id,
         user_id: user.id,
         result: cleanUpSymbols(value),
+        duration,
         department,
         action: "save_text",
       },
@@ -124,6 +132,7 @@ function EditorView({ text }: { text: string }) {
         method: "PATCH",
       }
     );
+    setDuration(0);
   }
   const disabled =
     submitResult.state !== "idle" || text?.length < 5 || !loader_text;

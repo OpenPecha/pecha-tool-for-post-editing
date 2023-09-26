@@ -7,6 +7,9 @@ import Source from "./component/Source";
 import { getUser } from "~/model/user";
 import { getTextForUser } from "~/model/text";
 import { DepartmentType } from "~/model/data/actions";
+import { useState } from "react";
+import ActiveUser from "~/component/ActiveUser";
+import { activeTime } from "./state";
 export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   let url = new URL(request.url);
   let session = url.searchParams.get("session") as string;
@@ -28,13 +31,13 @@ export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
 
 export default function BO_to_EN() {
   let { user, text } = useLoaderData();
-
   return (
     <div className="flex overflow-hidden h-screen flex-col md:flex-row">
       <Sidebar title="Bodyig To English" />
       <div className="mt-10 md:mt-2 h-[90vh] overflow-y-scroll w-full absolute md:relative top-4">
         <div className="flex justify-around flex-wrap gap-4 p-2">
           <div className="max-w-[600px] w-full">
+            <ActiveUser state={activeTime} />
             <div className="text-xs">
               {!user.isActive && "❗contact admin to get access on text "}
               {!text && "❗text unavailable"}
