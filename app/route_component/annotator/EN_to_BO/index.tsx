@@ -1,5 +1,10 @@
 import { LoaderArgs, LoaderFunction, defer, redirect } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import {
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+  useLocation,
+} from "@remix-run/react";
 import TextView from "~/component/TextView";
 import GPTView from "./component/GPTView";
 import BingView from "./component/BingView";
@@ -22,6 +27,7 @@ import { getTextForUser } from "~/model/text";
 import { Card, CardDescription } from "~/components/ui/card";
 import { Textarea } from "~/components/ui/textarea";
 import ActiveUser from "~/component/ActiveUser";
+import { Button } from "~/components/ui/button";
 export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   let url = new URL(request.url);
   let session = url.searchParams.get("session");
@@ -107,8 +113,10 @@ export default function EN_to_BO() {
 
 function EditorView({ text }: { text: string }) {
   const [value, setValue] = useState(text);
-  const { text: loader_text, department, user } = useLoaderData();
+  const { text: loader_text, department, user, history } = useLoaderData();
   const [duration, setDuration] = useRecoilState(activeTime);
+  const navigate = useNavigate();
+  const location = useLocation();
   const handleInput = (e) => {
     const newText = e.target.value;
     setValue(newText);
@@ -136,19 +144,28 @@ function EditorView({ text }: { text: string }) {
   }
   const disabled =
     submitResult.state !== "idle" || text?.length < 5 || !loader_text;
-
+  function cancel() {
+    setDuration(0);
+    const updatedURL = `${location.pathname}?session=${user.username}`;
+    navigate(updatedURL);
+  }
   return (
     <Card className="final-box overflow-hidden  ">
       <CardDescription className="flex justify-between bg-yellow-400 px-3">
         Final:
         <div className="flex gap-2">
-          <button
+          <Button
             onClick={handleSubmit}
             disabled={disabled}
-            className="btn-sm bg-green-400 disabled:bg-gray-400"
+            className="btn-sm bg-green-400 disabled:bg-gray-400 h-8"
           >
             submit
-          </button>
+          </Button>
+          {history && (
+            <Button onClick={cancel} className=" bg-red-400 h-5">
+              cancel
+            </Button>
+          )}
           <CopyButton textToCopy={cleanUpSymbols(value)} />
         </div>
       </CardDescription>

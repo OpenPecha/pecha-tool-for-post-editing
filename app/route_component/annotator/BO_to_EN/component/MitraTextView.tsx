@@ -18,6 +18,7 @@ function MitraTextView() {
     "bo-en"
   );
   useEffect(() => {
+    setData("");
     if (data && data?.length > 0) setData(data);
   }, [data]);
 

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useEffect, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { CardDescription } from "~/components/ui/card";
 import { dictionaryState } from "~/route_component/annotator/BO_to_EN/state";
 
@@ -12,7 +12,7 @@ export type DictionaryViewType = {
 };
 
 function DictionaryView({ data }: DictionaryViewType) {
-  const setDictionary = useSetRecoilState(dictionaryState);
+  const [dictionary, setDictionary] = useRecoilState(dictionaryState);
   const [temp, setTemp] = useState({});
 
   function handleInput(e, word) {
@@ -23,13 +23,12 @@ function DictionaryView({ data }: DictionaryViewType) {
   }
 
   function handleSubmit() {
-    console.log(temp);
     setDictionary((p) => ({ ...p, ...temp }));
   }
   return (
     <>
       <CardDescription className="  bg-blue-200 flex justify-between p-1">
-        Dictionary <button onClick={handleSubmit}>save</button>
+        Dictionary <button onClick={handleSubmit}>generate</button>
       </CardDescription>
       <div className="px-2 flex flex-wrap">
         {data.map(({ word, definition }, index) => {
@@ -40,6 +39,7 @@ function DictionaryView({ data }: DictionaryViewType) {
                 word={word}
                 definition={definition}
                 handleInput={handleInput}
+                dictionary={dictionary}
               />
             </div>
           );
@@ -53,10 +53,12 @@ function Definition({
   definition,
   word,
   handleInput,
+  dictionary,
 }: {
   word: string;
   definition: string;
   handleInput: (e, word) => void;
+  dictionary: { [key: string]: string } | null;
 }) {
   return (
     <span
@@ -65,7 +67,7 @@ function Definition({
       className="mx-1 px-1 border-2 border-gray-200 rounded "
       onInput={(e) => handleInput(e, word)}
     >
-      {definition}
+      {dictionary ? dictionary[word] : definition}
     </span>
   );
 }

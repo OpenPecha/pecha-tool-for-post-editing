@@ -5,29 +5,42 @@ import { cleanUpSymbols } from "~/lib/cleanupText";
 import {
   activeTime,
   dictionaryState,
+  mainTextState,
   mitraTextState,
 } from "~/route_component/annotator/BO_to_EN/state";
 import useDebounce from "~/lib/useDebounce";
-import { useLoaderData, useFetcher } from "@remix-run/react";
+import {
+  useLoaderData,
+  useFetcher,
+  useNavigate,
+  useLocation,
+} from "@remix-run/react";
 import CopyButton from "~/component/CopyButton";
 import { Card, CardDescription } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
+
 function GPTview() {
-  let { text, user, department } = useLoaderData();
+  let { text, user, department, history } = useLoaderData();
   let [duration, setDuration] = useRecoilState(activeTime);
   let data = useRecoilValue(mitraTextState);
-  let dictionary_data = useRecoilValue(dictionaryState);
+  let [dictionary_data, setDictionary] = useRecoilState(dictionaryState);
+  let [mainText] = useRecoilState(mainTextState);
   let mitraText = useDebounce(data, 1000);
   let dictionary = useDebounce(dictionary_data, 1000);
   const [content, setContent] = useState("");
-
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const submitResult = useFetcher();
   useEffect(() => {
-    setContent("");
-  }, [text]);
+    if (mainText === "") {
+      setContent("");
+    }
+  }, [mainText]);
   useEffect(() => {
     async function fetchdata() {
       setIsLoading(true);
+
       let prompt = `[paste the result here] ,Edit the following without adding information: ${mitraText} `;
       // filter dictionary data for only non emply value
       if (!!dictionary) {
@@ -37,8 +50,7 @@ function GPTview() {
             dict[key] = dict[key];
           }
         }
-        console.log(dict);
-        prompt += `[please use this data for dictionary ${JSON.stringify(
+        prompt += `[please use this dictionary for translation of tibetan to english ${JSON.stringify(
           dict
         )} ]`;
       }
@@ -73,20 +85,31 @@ function GPTview() {
     );
     setContent("");
     setDuration(0);
+    setDictionary(null);
+  }
+  function cancel() {
+    setDuration(0);
+    const updatedURL = `${location.pathname}?session=${user.username}`;
+    navigate(updatedURL);
   }
   const disabled = submitResult.state !== "idle" || content.length < 5 || !text;
   return (
     <Card className="mt-2">
       <CardDescription className="flex items-center justify-between bg-yellow-100 p-1">
         <div className="box-title px-2">Final:</div>
-        <div className="flex">
-          <button
+        <div className="flex gap-2 mr-2">
+          <Button
             onClick={handleSubmit}
             disabled={disabled}
-            className="btn-sm bg-green-400 disabled:bg-gray-400"
+            className="bg-green-400 disabled:bg-gray-400 h-5"
           >
             submit
-          </button>
+          </Button>
+          {history && (
+            <Button onClick={cancel} className=" bg-red-400 h-5">
+              cancel
+            </Button>
+          )}
           <CopyButton textToCopy={cleanUpSymbols(content)} />
         </div>
       </CardDescription>

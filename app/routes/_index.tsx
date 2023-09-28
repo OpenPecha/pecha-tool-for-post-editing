@@ -2,7 +2,7 @@ import type { V2_MetaFunction } from "@remix-run/node";
 import { Link, useOutletContext, useNavigate } from "@remix-run/react";
 import { Card, CardContent } from "~/components/ui/card";
 import { DepartmentType } from "~/model/data/actions";
-
+import { FaExchangeAlt } from "react-icons/fa";
 export const meta: V2_MetaFunction = () => {
   return [
     { title: "Post editing" },
@@ -27,16 +27,16 @@ export default function Index() {
         onClick={() => handleGoto("bo_en")}
         className="cursor-pointer hover:bg-gray-200"
       >
-        <CardContent className="mt-4">
-          བོད་ཡིག་ <div>-</div> English
+        <CardContent className="flex gap-3 items-center mt-4">
+          བོད་ཡིག་ <FaExchangeAlt /> English
         </CardContent>
       </Card>
       <Card
         onClick={() => handleGoto("en_bo")}
         className="cursor-pointer hover:bg-gray-200"
       >
-        <CardContent className="mt-4">
-          ENGLISH <div>-</div> བོད་ཡིག་
+        <CardContent className=" flex gap-3 items-center mt-4">
+          ENGLISH <FaExchangeAlt /> བོད་ཡིག་
         </CardContent>
       </Card>
     </div>
