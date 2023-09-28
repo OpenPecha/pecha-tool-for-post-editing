@@ -46,7 +46,7 @@ function Sidebar({ title }: { title: string }) {
           {(user.role === "ADMIN" || user.role === "REVIEWER") && (
             <Link
               to={`/admin/user?session=${user.username}`}
-              className="inline-flex items-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full justify-start"
+              className="inline-flex items-center bg-gray-50 hover:underline  rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full justify-start"
             >
               {user.role} Dashboard
             </Link>
@@ -54,8 +54,9 @@ function Sidebar({ title }: { title: string }) {
         </div>
         <Separator />
 
-        <div className="mb-2 px-4 text-xs font-semibold tracking-tight">
-          ID : {text?.id}
+        <div className="mb-2 mt-3 px-4 text-xs tracking-tight flex justify-between ">
+          <div>current Task</div>
+          <div>ID : {text?.id}</div>
         </div>
         <Separator />
         <div className="flex-1 py-2">
