@@ -7,13 +7,13 @@ const Header = (props: { className?: string }) => {
   return (
     <nav
       className={cn(
-        "flex items-center space-x-4 lg:space-x-6",
+        "flex items-center space-x-4 lg:space-x-6 ml-2",
         props.className
       )}
       {...props}
     >
       <Link to={url} className="flex items-center space-x-2">
-        Home
+        WEBAPP
       </Link>
       <NavLink
         className={({ isActive, isPending }) =>
