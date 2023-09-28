@@ -1,6 +1,8 @@
 import { Link, useNavigate, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import { Hamburger } from "./SVGS";
+import { Separator } from "~/components/ui/separator";
+import { ScrollArea } from "~/components/ui/scroll-area";
 
 export type historyText = {
   id: number;
@@ -17,7 +19,7 @@ function Sidebar({ title }: { title: string }) {
 
   function SidebarHeader() {
     return (
-      <div className="flex bg-[#384451] px-2 py-3 items-center justify-between md:hidden ">
+      <div className="flex px-2 py-3 items-center justify-between md:hidden ">
         <div>About</div>
         <div className="cursor-pointer p-2" onClick={() => setOpenMenu(false)}>
           x
@@ -26,44 +28,53 @@ function Sidebar({ title }: { title: string }) {
     );
   }
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col border-r bg-white dark:bg-slate-500 dark:text-white">
       <div
-        className=" flex px-2 py-3 text-white bg-gray-600 text-lg font-semibold items-center  gap-2 "
+        className=" flex px-2 py-3 text-lg font-semibold items-center  gap-2 "
         onClick={() => setOpenMenu(true)}
       >
         <Hamburger />
         {title}
       </div>
       <div
-        className={`flex flex-col text-white bg-[#54606e] overflow-y-auto overflow-x-hidden max-h-[100vh] transition-all -translate-x-full z-30 ${
+        className={`flex flex-col bg-white dark:bg-slate-500 dark:text-white  overflow-y-auto overflow-x-hidden max-h-[100vh] transition-all -translate-x-full z-30 ${
           openMenu ? "block translate-x-0" : ""
         } min-h-[100vh] w-[260px] md:translate-x-0`}
       >
-        <div className=" flex gap-2 flex-col border-b-2 border-b-[#384451] mb-3  mt-2 ">
+        <div className=" flex gap-2 flex-col mb-3  mt-2 ">
           <SidebarHeader />
           {(user.role === "ADMIN" || user.role === "REVIEWER") && (
             <Link
               to={`/admin/user?session=${user.username}`}
-              className="bg-gray-400 hover:opacity-80 hover:bg-gray-800 transition-all duration-75"
+              className="inline-flex items-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full justify-start"
             >
               {user.role} Dashboard
             </Link>
           )}
         </div>
-        <div>text:{text?.id}</div>
-        <div className="flex-1">
-          <div className="text-sm mb-2 font-bold">History</div>
-          <div className="flex gap-3 flex-wrap mx-2">
-            <History list={rejectedlist} type="rejected" />
-            <History list={acceptedlist} type="accepted" />
+        <Separator />
+
+        <div className="mb-2 px-4 text-xs font-semibold tracking-tight">
+          ID : {text?.id}
+        </div>
+        <Separator />
+        <div className="flex-1 py-2">
+          <div className="relative px-4 text-lg font-semibold tracking-tight">
+            History
           </div>
+          <ScrollArea className="h-[300px] px-1">
+            <div className="space-y-1 p-2">
+              <History list={rejectedlist} type="rejected" />
+              <History list={acceptedlist} type="accepted" />
+            </div>
+          </ScrollArea>
         </div>
       </div>
     </div>
   );
 }
 
-function History({ list, type }) {
+function History({ list, type }: any) {
   let { user, department, history } = useLoaderData();
   let navigate = useNavigate();
   let isRejected = type === "rejected";
