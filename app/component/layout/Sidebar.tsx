@@ -9,12 +9,12 @@ export type historyText = {
 
 function Sidebar({ title }: { title: string }) {
   let [openMenu, setOpenMenu] = useState(false);
-  let { user, department } = useLoaderData();
-
+  let { user, department, text } = useLoaderData();
   let rejectedlist =
     department === "bo_en" ? user.rejected_en : user.rejected_bo;
   let acceptedlist =
     department === "en_bo" ? user.accepted_bo : user.accepted_en;
+
   function SidebarHeader() {
     return (
       <div className="flex bg-[#384451] px-2 py-3 items-center justify-between md:hidden ">
@@ -50,11 +50,12 @@ function Sidebar({ title }: { title: string }) {
             </Link>
           )}
         </div>
+        <div>text:{text?.id}</div>
         <div className="flex-1">
           <div className="text-sm mb-2 font-bold">History</div>
           <div className="flex gap-3 flex-wrap mx-2">
-            <History list={rejectedlist} />
-            <History list={acceptedlist} />
+            <History list={rejectedlist} type="rejected" />
+            <History list={acceptedlist} type="accepted" />
           </div>
         </div>
       </div>
@@ -62,10 +63,10 @@ function Sidebar({ title }: { title: string }) {
   );
 }
 
-function History({ list }) {
+function History({ list, type }) {
   let { user, department, history } = useLoaderData();
   let navigate = useNavigate();
-
+  let isRejected = type === "rejected";
   function handleGoto(url: string) {
     navigate(url);
   }
@@ -79,7 +80,7 @@ function History({ list }) {
             onClick={() => handleGoto(url)}
             className={`cursor-pointer  px-2 flex gap-3 items-center ${
               history == item.id ? "bg-gray-700" : ""
-            }`}
+            }  ${isRejected && "text-red-500"}`}
             key={item.id + "history"}
           >
             {item.id}

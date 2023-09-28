@@ -202,6 +202,7 @@ export async function updateText(
         translated: result,
         translated_by_id: user_id,
         duration: duration,
+        rejected_by_id: null,
       },
     });
     return data;
@@ -210,15 +211,23 @@ export async function updateText(
   }
 }
 
-export function rejectText(id: string, department: DepartmentType) {
+export async function rejectText(id: string, department: DepartmentType) {
   try {
     let database = databases[department] as typeof db.eN_BO_Text;
-    return database.update({
+
+    let text = await database.findFirst({ where: { id: parseInt(id) } });
+    let userId = text?.translated_by_id as string;
+    console.log("translator:", userId);
+    let updated = await database.update({
       where: { id: parseInt(id) },
       data: {
         status: "REJECTED",
+        translated_by_id: null,
+        rejected_by_id: userId,
       },
     });
+
+    return updated;
   } catch (e) {
     throw new Error("Error in updating data" + e);
   }

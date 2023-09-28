@@ -35,7 +35,7 @@ function TextList({ department, groupedData }: any) {
         let asignedUser = value[0]?.transcriber?.username || null;
         let url = `/admin/text/${department}/${key}?session=${session}`;
         return (
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center" key={key}>
             <Link
               key={key + index}
               className={`px-2

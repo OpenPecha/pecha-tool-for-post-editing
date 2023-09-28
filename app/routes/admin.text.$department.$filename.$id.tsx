@@ -23,7 +23,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   let formdata = await request.formData();
   let action = formdata.get("action") as string;
   let id = formdata.get("id") as string;
-  let department = params.department as string;
+  let department = params.department as DepartmentType;
 
   if (action === "reject") {
     return rejectText(id, department);

@@ -17,11 +17,17 @@ const action: ActionFunction = async ({ request }) => {
         let user_id = formData.get("user_id") as string;
         let text_id = formData.get("id") as string;
         let duration = formData.get("duration") as string;
-
+        let update = await updateText(
+          text_id,
+          user_id,
+          result,
+          department,
+          duration
+        );
         if (history) {
           return redirect(`/${department}/?session=${session}`);
         }
-        return await updateText(text_id, user_id, result, department, duration);
+        return update;
       }
     }
   }
