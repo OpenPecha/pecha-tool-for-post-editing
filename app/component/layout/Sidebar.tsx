@@ -46,7 +46,7 @@ function Sidebar({ title }: { title: string }) {
           {(user.role === "ADMIN" || user.role === "REVIEWER") && (
             <Link
               to={`/admin/user?session=${user.username}`}
-              className="inline-flex items-center bg-gray-50 hover:underline  rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full justify-start"
+              className="inline-flex items-center bg-gray-200 hover:underline  rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-full justify-start"
             >
               {user.role} Dashboard
             </Link>
@@ -60,9 +60,7 @@ function Sidebar({ title }: { title: string }) {
         </div>
         <Separator />
         <div className="flex-1 py-2">
-          <div className="relative px-4 text-lg font-semibold tracking-tight">
-            History
-          </div>
+          <div className="relative px-4  tracking-tight">History</div>
           <ScrollArea className="h-[300px] px-1">
             <div className="space-y-1 p-2">
               <History list={rejectedlist} type="rejected" />
@@ -90,9 +88,11 @@ function History({ list, type }: any) {
         return (
           <span
             onClick={() => handleGoto(url)}
-            className={`cursor-pointer  px-2 flex gap-3 items-center ${
-              history == item.id ? "bg-gray-700" : ""
-            }  ${isRejected && "text-red-500"}`}
+            className={`cursor-pointer text-sm   px-2 flex gap-3 items-center ${
+              history == item.id
+                ? "bg-gray-200 dark:bg-gray-700 dark:text-white"
+                : ""
+            }  ${isRejected && "text-red-500 "}`}
             key={item.id + "history"}
           >
             {item.id}

@@ -30,6 +30,7 @@ export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
 
 export default function BO_to_EN() {
   let { user, text } = useLoaderData();
+  let rejectedlist = user.rejected_en?.length;
   return (
     <div className="flex overflow-hidden h-screen flex-col md:flex-row">
       <Sidebar title="Bodyig To English" />
@@ -40,6 +41,16 @@ export default function BO_to_EN() {
             <div className="text-xs">
               {!user.isActive && "❗contact admin to get access on text "}
               {!text && "❗text unavailable"}
+              {rejectedlist > 0 && (
+                <div className="text-red-500 flex items-center gap-2 font-bold">
+                  <img
+                    src="/assets/notification.gif"
+                    alt="notification "
+                    className="w-8 h-8"
+                  />
+                  SOME OF YOUR WORK IS REJECTED
+                </div>
+              )}
             </div>
 
             <Source />
