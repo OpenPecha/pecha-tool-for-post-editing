@@ -28,7 +28,12 @@ function Source({}: SourceProps) {
       <Tabs defaultValue="source" className="w-full">
         <TabsList>
           <TabsTrigger value="source">Source</TabsTrigger>
-          <TabsTrigger value="dictionary">Dictionary</TabsTrigger>
+          <TabsTrigger
+            value="dictionary"
+            disabled={sourceText === "" || !sourceText}
+          >
+            Dictionary
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="source">
           <TextView

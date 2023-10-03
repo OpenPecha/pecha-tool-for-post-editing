@@ -47,7 +47,7 @@ const AboutUser = ({
     <div className="sticky top-[80px]  rounded-sm border border-stroke bg-white px-5 pt-6 pb-10 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-10 ">
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm flex justify-between items-center capitalize">
+          <CardTitle className="text-sm flex justify-between items-center lowercase">
             {annotator?.username} details
             <AllowAnnotation annotator={annotator} />
           </CardTitle>

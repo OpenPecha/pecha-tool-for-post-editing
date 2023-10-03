@@ -22,14 +22,12 @@ export function AdminPage() {
       <div className="flex h-screen overflow-hidden">
         <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
           <Header />
-          <main>
-            <div
-              className={`mx-auto max-w-screen-2xl  ${
-                pathname.includes("metabase") ? "p-0" : " p-4 md:p-6 2xl:p-10"
-              }`}
-            >
-              <Outlet context={user} />
-            </div>
+          <main
+            className={`mx-auto max-w-screen-2xl w-full flex-1   ${
+              pathname.includes("metabase") ? "p-0" : " p-4 md:p-6 2xl:p-10"
+            }`}
+          >
+            <Outlet context={user} />
           </main>
         </div>
       </div>

@@ -55,8 +55,8 @@ function Sidebar({ title }: { title: string }) {
         <Separator />
 
         <div className="mb-2 mt-3 px-4 text-xs tracking-tight flex justify-between ">
-          <div>current Task</div>
-          <div>ID : {text?.id}</div>
+          <div>Task</div>
+          <div>{text?.id}</div>
         </div>
         <Separator />
         <div className="flex-1 py-2">
