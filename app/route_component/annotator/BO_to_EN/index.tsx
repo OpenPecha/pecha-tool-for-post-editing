@@ -44,7 +44,7 @@ export default function BO_to_EN() {
               {rejectedlist > 0 && (
                 <div className="text-red-500 flex items-center gap-2 font-bold">
                   <img
-                    src="/assets/notification.gif"
+                    src="/asset/notification.gif"
                     alt="notification "
                     className="w-8 h-8"
                   />

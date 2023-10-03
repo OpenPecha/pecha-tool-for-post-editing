@@ -29,10 +29,9 @@ export const action: ActionFunction = async ({ request, params }) => {
       let filename = formdata.get("filename") as string;
       let department = formdata.get("department") as DepartmentType;
       let parsed_Data = JSON.parse(data);
-      let paragraphs = parsed_Data.map((item) => item.paragraph);
       let status = await uploadData({
         name: filename,
-        data: paragraphs,
+        data: parsed_Data,
         department,
       });
       return status;

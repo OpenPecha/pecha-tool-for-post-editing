@@ -58,17 +58,19 @@ export default function AboutOneText() {
       <DialogContent>
         <ScrollArea className="h-[50dvh]">
           <DialogHeader>
-            <DialogTitle>source:</DialogTitle>
+            <DialogTitle>Source:</DialogTitle>
             <DialogDescription>
               <p className=" text-sm ">{text.original_text}</p>
             </DialogDescription>
-            <DialogTitle>translated:</DialogTitle>
+            <DialogTitle>Translated:</DialogTitle>
             <DialogDescription>
               <p className=" text-sm">{text.translated}</p>
             </DialogDescription>
-            <Button onClick={reject}>reject</Button>
           </DialogHeader>
         </ScrollArea>
+        <Button className="bg-red-300 hover:bg-red-400" onClick={reject}>
+          reject
+        </Button>
       </DialogContent>
     </Dialog>
   );

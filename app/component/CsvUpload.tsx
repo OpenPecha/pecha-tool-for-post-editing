@@ -20,10 +20,11 @@ const CSVSelector = ({ department }: { department: DepartmentType }) => {
     }
     //  Passing file data (event.target.files[0]) to parse using Papa.parse
     Papa.parse(event.target.files[0], {
-      header: true,
       skipEmptyLines: true,
       complete: async function (results) {
-        setData(results?.data);
+        let data = results?.data?.map((item) => item[0]);
+        console.log(data);
+        setData(data);
       },
     });
   };
