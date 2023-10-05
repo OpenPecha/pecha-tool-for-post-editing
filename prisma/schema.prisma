@@ -21,8 +21,11 @@ model User{
   rejected_bo EN_BO_Text[]   @relation("UserRejectedText")
   assigned_en BO_EN_Text[]   @relation("UserAssignedBO_EN")
   assigned_bo EN_BO_Text[]   @relation("UserAssignedEN_BO")
+  annotator User[] @relation("ReviewerAssigned")
 
   isActive Boolean @default(false)
+  reviewer  User? @relation("ReviewerAssigned",fields: [reviewer_id], references: [id])
+  reviewer_id String?
 }
 
 model BO_EN_Text{

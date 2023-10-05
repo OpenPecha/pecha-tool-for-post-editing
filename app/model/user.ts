@@ -57,6 +57,7 @@ export const getUsers = async () => {
         take: 10,
         orderBy: { id: "desc" },
       },
+      reviewer: true,
     },
   });
   return users;
@@ -109,6 +110,32 @@ export const removeUser = async (username: string) => {
       },
     });
     return user;
+  } catch (e) {
+    throw new Error(e);
+  }
+};
+
+export const updateUserReviewer = async (
+  id: string,
+  reviewer_name: string | null
+) => {
+  if (reviewer_name === null || reviewer_name === "") {
+    let updatedUser = await db.user.update({
+      where: { id },
+      data: { reviewer_id: null },
+    });
+    return updatedUser;
+  }
+  try {
+    let updatedUser = await db.user.update({
+      where: { id },
+      data: {
+        reviewer: {
+          connect: { username: reviewer_name },
+        },
+      },
+    });
+    return updatedUser;
   } catch (e) {
     throw new Error(e);
   }

@@ -29,7 +29,7 @@ function TextList({ department, groupedData }: any) {
   }, [department]);
 
   return (
-    <>
+    <div className="shadow-sm mt-2 flex flex-col-reverse">
       {Object.keys(groupedData).map((key, index) => {
         const value = groupedData[key];
         let asignedUser = value[0]?.transcriber?.username || null;
@@ -58,7 +58,7 @@ function TextList({ department, groupedData }: any) {
           </div>
         );
       })}
-    </>
+    </div>
   );
 }
 

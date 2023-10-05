@@ -1,6 +1,6 @@
 import { LoaderFunction } from "@remix-run/node";
 import { Outlet, useLoaderData, useLocation } from "@remix-run/react";
-import CsvUpload from "~/component/CsvUpload";
+import CsvUpload from "~/component/Upload";
 import Sidebar from "./Sidebar";
 import { getUser } from "~/model/user";
 import { useState } from "react";

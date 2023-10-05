@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import AssignReviewer from "./AssignReviewer";
 
 function Info({ children }: { children: React.ReactNode }) {
   return (
@@ -62,6 +63,10 @@ const AboutUser = ({
         <Info>
           <Title>Role:</Title>
           <AssignRole annotator={annotator} isAdmin={isAdmin} />
+        </Info>
+        <Info>
+          <Title>Reviewer:</Title>
+          <AssignReviewer user={annotator} />
         </Info>
         <Info>
           <Title>Woking:</Title>

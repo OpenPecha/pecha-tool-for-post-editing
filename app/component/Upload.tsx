@@ -1,10 +1,9 @@
 import React, { useRef, useEffect } from "react";
 import { useFetcher } from "react-router-dom";
-import Papa from "papaparse";
 import { DepartmentType } from "~/model/data/actions";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-const CSVSelector = ({ department }: { department: DepartmentType }) => {
+const UploadText = ({ department }: { department: DepartmentType }) => {
   const [data, setData] = React.useState([]);
   const [filename, setFileName] = React.useState(null);
   const dataUpload = useFetcher();
@@ -13,20 +12,18 @@ const CSVSelector = ({ department }: { department: DepartmentType }) => {
     let file = event.target.files[0];
     if (file) {
       let filename = event.target.files[0].name;
-      if (filename.includes(".csv")) {
-        filename = filename.replace(".csv", "");
+      if (filename.includes(".txt")) {
+        filename = filename.replace(".txt", "");
       }
       setFileName(filename);
     }
-    //  Passing file data (event.target.files[0]) to parse using Papa.parse
-    Papa.parse(event.target.files[0], {
-      skipEmptyLines: true,
-      complete: async function (results) {
-        let data = results?.data?.map((item) => item[0]);
-        console.log(data);
-        setData(data);
-      },
-    });
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      let data_result = event.target.result;
+      data_result = data_result.split("\n");
+      if (data_result?.length > 0) setData(data_result);
+    };
+    reader.readAsText(file);
   };
   const handleUpload = () => {
     if (data.length < 1) return null;
@@ -58,7 +55,7 @@ const CSVSelector = ({ department }: { department: DepartmentType }) => {
       )}
       <div className="flex gap-3 mb-3">
         <Input
-          accept=".csv"
+          accept=".txt"
           type="file"
           onChange={handleFileChange}
           ref={hiddenFileInput}
@@ -72,4 +69,4 @@ const CSVSelector = ({ department }: { department: DepartmentType }) => {
   );
 };
 
-export default CSVSelector;
+export default UploadText;

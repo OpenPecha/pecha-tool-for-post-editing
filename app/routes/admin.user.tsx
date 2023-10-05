@@ -7,10 +7,12 @@ import {
 import { useState } from "react";
 import { useFetcher, useOutletContext } from "@remix-run/react";
 import {
+  getUser,
   getUsers,
   removeUser,
   updateUserAssign,
   updateUserNickname,
+  updateUserReviewer,
   updateUserRole,
 } from "~/model/user";
 import UserList from "~/route_component/admin/UserList";
@@ -22,6 +24,24 @@ export const loader: LoaderFunction = async ({ request }) => {
   let session = url.searchParams.get("session");
   if (!session) return redirect("/error");
   let users = await getUsers();
+  let admin = await getUser(session);
+  if (admin?.role !== "ADMIN") {
+    users = users
+      .filter((user) => {
+        if (user.role === "ADMIN") return false;
+        return user.reviewer_id === null || user.reviewer_id === admin?.id;
+      })
+      .sort((a, b) => {
+        if (a.reviewer_id === null && b.reviewer_id !== null) {
+          return 1; // a should come after b
+        } else if (a.reviewer_id !== null && b.reviewer_id === null) {
+          return -1; // a should come before b
+        } else {
+          return 0; // no change in order
+        }
+      });
+  }
+
   return {
     users,
   };
@@ -44,6 +64,12 @@ export const action: ActionFunction = async ({ request }) => {
       let role = formdata.get("role") as Role;
       return await updateUserRole(id, role);
     }
+
+    case "change_reviewer": {
+      let reviewer_name = formdata.get("reviewer") as string;
+      return await updateUserReviewer(id, reviewer_name);
+    }
+
     case "remove_user": {
       if (request.method === "DELETE") {
         let username = formdata.get("username") as string;
