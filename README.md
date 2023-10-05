@@ -1,3 +1,17 @@
+<h1 align="center">
+  <br>
+  <a href="https://openpecha.org"><img src="https://avatars.githubusercontent.com/u/82142807?s=400&u=19e108a15566f3a1449bafb03b8dd706a72aebcd&v=4" alt="OpenPecha" width="150"></a>
+  <br>
+</h1>
+
+<h3 align="center">Post Editing tool for Pecha.tools</h3>
+
+## Project owner(s)
+
+<!-- Link to the repo owners' github profiles -->
+
+- [@tenkus47](https://github.com/tenkus47)
+
 # Tibetan-English Remix Translation App
 
 Welcome to the Tibetan-English Post Editing Tool! This project is designed to provide an easy and efficient way to translate Tibetan text to English and vice versa using a combination of APIs from Dharma Mitra, ChatGPT, and Bing Translate. Whether you're a student, researcher, or simply curious about Tibetan culture and language, this app will help bridge the language gap and make translation a breeze.
