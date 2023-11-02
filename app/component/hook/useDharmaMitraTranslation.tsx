@@ -7,6 +7,7 @@ function useDharmaMitraTranslation(
   language: languageType
 ) {
   const fetcher = useFetcher();
+  
   useEffect(() => {
     if (debouncedText && language)
       fetcher.submit(

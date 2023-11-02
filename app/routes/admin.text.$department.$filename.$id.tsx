@@ -12,6 +12,7 @@ import {
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Button } from "~/components/ui/button";
 import { useState } from "react";
+import { FiEdit2 } from "react-icons/fi";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   let department = params.department as DepartmentType;
@@ -88,8 +89,9 @@ export default function AboutOneText() {
               onClick={() => {
                 setEdit(true);
               }}
+              title="edit"
             >
-              edit
+              <FiEdit2 />
             </button>
           </div>
           {edit ? (

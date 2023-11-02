@@ -4,7 +4,7 @@ import { DepartmentType, uploadData } from "~/model/data/actions";
 import { deleteTextWithName, getData } from "~/model/text";
 import _ from "lodash";
 import TextList from "~/route_component/admin/TextList";
-import CSVSelector from "~/component/Upload";
+import TextUpload from "~/component/Upload";
 export const loader: LoaderFunction = async ({ request, params }) => {
   let department = params.department as DepartmentType;
   let text = await getData(department);
@@ -44,13 +44,12 @@ function department() {
 
   return (
     <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5 ">
-      <div className="col-span-12 xl:col-span-8 ">
+      <div className="col-span-12 xl:col-span-8 overflow-hidden ">
         <Outlet />
       </div>
       <div className="col-span-12 xl:col-span-4">
         <div className="w-full">
-          <CSVSelector department={department} />
-          <h1 className="text-light text-gray-500">Texts</h1>
+          <TextUpload department={department} />
           <TextList department={department} groupedData={groupedData} />
         </div>
       </div>

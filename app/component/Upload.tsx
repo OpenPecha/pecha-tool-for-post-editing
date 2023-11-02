@@ -21,7 +21,10 @@ const UploadText = ({ department }: { department: DepartmentType }) => {
     reader.onload = (event) => {
       let data_result = event.target.result;
       data_result = data_result.split("\n");
-      if (data_result?.length > 0) setData(data_result);
+      if (data_result?.length > 0) {
+        data_result = data_result.filter((item) => item !== "");
+        setData(data_result);
+      }
     };
     reader.readAsText(file);
   };

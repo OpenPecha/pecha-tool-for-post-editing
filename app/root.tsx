@@ -6,6 +6,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useFetchers,
   useLoaderData,
 } from "@remix-run/react";
 import globalStyle from "~/style/global.css";
@@ -13,10 +14,14 @@ import { RecoilRoot } from "recoil";
 import tailwindStyle from "~/style/tailwind.css";
 import { createUserIfNotExists } from "./model/user";
 import { Toaster } from "~/components/ui/toaster";
-
+import NProgress from "nprogress";
+import nProgressStyles from "nprogress/nprogress.css";
+import { useNavigation } from "@remix-run/react";
+import { useEffect, useMemo } from "react";
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwindStyle },
   { rel: "stylesheet", href: globalStyle },
+  { rel: "stylesheet", href: nProgressStyles },
 ];
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -28,6 +33,24 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function App() {
   const { user } = useLoaderData();
+  let transition = useNavigation();
+
+  let fetchers = useFetchers();
+  let state = useMemo<"idle" | "loading">(
+    function getGlobalState() {
+      let states = [
+        transition.state,
+        ...fetchers.map((fetcher) => fetcher.state),
+      ];
+      if (states.every((state) => state === "idle")) return "idle";
+      return "loading";
+    },
+    [transition.state, fetchers]
+  );
+  useEffect(() => {
+    if (state === "loading") NProgress.start();
+    if (state === "idle") NProgress.done();
+  }, [transition.state]);
   return (
     <html lang="en">
       <head>
