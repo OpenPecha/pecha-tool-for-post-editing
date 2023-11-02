@@ -15,6 +15,66 @@ export const fetchDharmaMitraData = async (
     model: "NO",
   };
 
+  function parseWhenEnglishResponse(responseText: string) {
+    let result = responseText.split("\n");
+
+    result = result.map((item) => {
+      let result = item.replaceAll("event: message", "");
+      result = result.replaceAll("data: ", "");
+      result = result.replaceAll(/(^\'|\'$)/g, "");
+      result = result.replaceAll("<unk>", "");
+      return result;
+    });
+    // let finalResult = result.filter((item) => item !== "");
+
+    return result.join("");
+  }
+  function parseWhenTibetanResponse(responseText: string) {
+    let result = responseText.split("\n");
+
+    result = result.map((item) => {
+      let result = item.replaceAll("event: message", "");
+      result = result.replaceAll("data: ", "");
+      result = result.replaceAll(/(^\'|\'$)/g, "");
+      return result;
+    });
+    // let finalResult = result.filter((item) => item !== "");
+
+    return result.join("");
+  }
+  function parseApiResponse(apiResponse: String) {
+    const translationStartIndex = apiResponse.indexOf("data: ") + 7;
+    const translationEndIndex = apiResponse.indexOf(
+      "<br /><br />",
+      translationStartIndex
+    );
+
+    if (translationStartIndex !== -1 && translationEndIndex !== -1) {
+      const translationOutput = apiResponse.substring(
+        translationStartIndex,
+        translationEndIndex
+      );
+      const disclaimerStartIndex = translationEndIndex + 12; // Skip "<br /><br /><small><i>"
+      const disclaimerEndIndex = apiResponse.indexOf(
+        "</i></small>",
+        disclaimerStartIndex
+      );
+
+      if (disclaimerStartIndex !== -1 && disclaimerEndIndex !== -1) {
+        const disclaimer = apiResponse.substring(
+          disclaimerStartIndex,
+          disclaimerEndIndex
+        );
+        return {
+          translation: translationOutput.trim(),
+          disclaimer: disclaimer.trim(),
+        };
+      }
+    }
+
+    // Handle invalid response format
+    return null;
+  }
   try {
     const response = await fetch(apiUrl, {
       method: "POST",
@@ -24,9 +84,26 @@ export const fetchDharmaMitraData = async (
       body: JSON.stringify(requestData),
     });
     let text = await response.text();
-    let res = convertToJSON(text);
-    let split_text = res?.data?.split("<br />");
-    return { data: split_text?.at(0) };
+    let source = language.split("-")[0];
+    const parsedResponse = parseApiResponse(text);
+    const { translation, disclaimer } = parsedResponse;
+    let parseEnglishRes = parseWhenEnglishResponse(translation);
+    let parseTibetanRes = parseWhenTibetanResponse(translation);
+    console.log(parseEnglishRes, parseTibetanRes);
+    function textreplace(text) {
+      let result = text.replaceAll(
+        "Your request is a little bit too short. Please try again as MITRA can only work reliably on complete sentences.",
+        " "
+      );
+      return result;
+    }
+    return {
+      data:
+        source === "en"
+          ? textreplace(parseTibetanRes)
+          : textreplace(parseEnglishRes),
+      disclaimer,
+    };
   } catch (e) {
     return { error: " Error in DharmaMitra API, " + e };
   }
