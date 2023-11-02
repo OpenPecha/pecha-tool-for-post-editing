@@ -232,3 +232,27 @@ export async function rejectText(id: string, department: DepartmentType) {
     throw new Error("Error in updating data" + e);
   }
 }
+
+export async function updateTextFromReviewer(
+  id: string,
+  department: DepartmentType,
+  content: string
+) {
+  try {
+    let database = databases[department] as typeof db.eN_BO_Text;
+
+    let text = await database.findFirst({ where: { id: parseInt(id) } });
+    let userId = text?.translated_by_id as string;
+    let updated = await database.update({
+      where: { id: parseInt(id) },
+      data: {
+        status: "APPROVED",
+        translated_by_id: userId,
+        translated: content,
+      },
+    });
+    return updated;
+  } catch (e) {
+    throw new Error("Error in updating data" + e);
+  }
+}
