@@ -75,38 +75,50 @@ export const fetchDharmaMitraData = async (
     // Handle invalid response format
     return null;
   }
+  let response;
   try {
-    const response = await fetch(apiUrl, {
+    response = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(requestData),
     });
-    let text = await response.text();
-    let source = language.split("-")[0];
-    const parsedResponse = parseApiResponse(text);
-    const { translation, disclaimer } = parsedResponse;
-    let parseEnglishRes = parseWhenEnglishResponse(translation);
-    let parseTibetanRes = parseWhenTibetanResponse(translation);
-    console.log(parseEnglishRes, parseTibetanRes);
-    function textreplace(text) {
-      let result = text.replaceAll(
-        "Your request is a little bit too short. Please try again as MITRA can only work reliably on complete sentences.",
-        " "
-      );
-      return result;
+    if (!response.ok) {
+      return { error: `API Error Try after sometime` };
     }
-    return {
-      data:
-        source === "en"
-          ? textreplace(parseTibetanRes)
-          : textreplace(parseEnglishRes),
-      disclaimer,
-    };
   } catch (e) {
-    return { error: " Error in DharmaMitra API, " + e };
+    return { error: `API Error Try after sometime` };
   }
+
+  let text = await response.text();
+  let source = language.split("-")[0];
+  const parsedResponse = parseApiResponse(text);
+  if (!parsedResponse) {
+    return { error: "api responce couldnot be parsed" };
+  }
+
+  const { translation, disclaimer } = parsedResponse;
+  let parseEnglishRes = parseWhenEnglishResponse(translation);
+  if (parseEnglishRes.includes("Your request is a little bit too short.")) {
+    return { error: "ནང་འཇུག་ཡི་གེ་ཉུང་དྲག་འདུག" };
+  }
+  let parseTibetanRes = parseWhenTibetanResponse(translation);
+  console.log(parseEnglishRes, parseTibetanRes);
+  function textreplace(text: string) {
+    let result = text.replaceAll(
+      "Your request is a little bit too short. Please try again as MITRA can only work reliably on complete sentences.",
+      " "
+    );
+    return result;
+  }
+  return {
+    data:
+      source === "en"
+        ? textreplace(parseTibetanRes)
+        : textreplace(parseEnglishRes),
+    disclaimer,
+  };
 };
 
 export const fetchGPTData = async (sentence: string) => {
