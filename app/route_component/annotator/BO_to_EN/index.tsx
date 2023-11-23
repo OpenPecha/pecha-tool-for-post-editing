@@ -18,7 +18,7 @@ export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
   let department: DepartmentType = "bo_en";
   // if (!user) return redirect("/error");
   let text = null;
-  if (user.isActive) text = await getTextForUser(user.id, department, history);
+  if (user?.isActive) text = await getTextForUser(user.id, department, history);
   if (session === "demo") text = null;
   return defer({
     user,
@@ -31,6 +31,7 @@ export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
 export default function BO_to_EN() {
   let { user, text } = useLoaderData();
   let rejectedlist = user.rejected_en?.length;
+  let isReal = user?.username === "demo" ? false : true;
   return (
     <div className="flex overflow-hidden h-screen flex-col md:flex-row">
       <Sidebar title="Bodyig To English" />
@@ -39,8 +40,10 @@ export default function BO_to_EN() {
           <div className="max-w-[600px] w-full">
             <ActiveUser state={activeTime} />
             <div className="text-xs">
-              {!user.isActive && "❗contact admin to get access on text "}
-              {!text && "❗text unavailable"}
+              {isReal &&
+                !user.isActive &&
+                "❗contact admin to get access on text "}
+              {isReal && !text && "❗text unavailable"}
               {rejectedlist > 0 && (
                 <div className="text-red-500 flex items-center gap-2 font-bold">
                   <img
